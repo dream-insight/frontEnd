@@ -15,7 +15,8 @@
 4. [함수](#4-함수)
 5. [화살표 함수](#5-화살표-함수)
 6. [오브젝트 프로퍼티](#6-오브젝트-프로퍼티)
-7. [연산자](#7-연산자)
+7. [문자열](#7-문자열)
+8. [연산자](#8-연산자)
 
 ---
 
@@ -282,7 +283,7 @@
     }
   }
   ```
-  > 우는 개발을 하면서 간혹 코드를 한꺼번에 수정해야 하는 때도 있다는 것을 알고 있습니다. 그러한 경험이 있는 개발자는 위와 같은 코드 나열 방식이 왜 안좋은지 익히 알고 있고 가독성에서도 좋지 않다는 것도 알 수 있습니다.
+  > 위의 예제는 개발을 하면서 간혹 코드를 한꺼번에 수정해야 하는 때도 있다는 것을 알고 있습니다. 그러한 경험이 있는 개발자는 위와 같은 코드 나열 방식이 왜 안좋은지 익히 알고 있고 가독성에서도 좋지 않다는 것도 알 수 있습니다.
 
 :arrow_up: [목차](#목차)
 
@@ -290,7 +291,7 @@
 
 ## 4. 함수
 * 4.1. watch, computed, methods 등에 함수 정의시 단축구문을 이용하세요.
-  > 단, computed에 간단한 연산 반환에 대해서는 람다 함수를 허용합니다.
+  > 단, computed에 간단한 연산 반환에 대해서는 람다식을 허용합니다.
 
   ```javascript
   export default {
@@ -417,9 +418,9 @@
   }
   ```
   * 위와 같이 함수 수행을 종료하고자 <code>return false</code>를 사용하는 것은 아무 의미 없습니다.
-  * 따라서 void 함수 수행을 종류하고자 할 때는 오직 <code>return</code>으로 종료시켜 주세요.
+  * 따라서 void 함수 수행을 종료하고자 할 때는 오직 <code>return</code>으로 종료시켜 주세요.
 
-* 4.4. 함수의 인자(parameters)는 순수 참조(const)로 사용하세요.
+* 4.4. 함수의 인자(parameters)는 참조로만 사용하세요.
   * 함수의 전달 인자에 default 값을 사용하여, 제어 문에서 그 값을 비교하세요.
   * 전달 인자의 값을 직접적으로 변이 하여 사용하게 되면, 찾기 힘든 오류가 발생 할 수도 있습니다.
   ```javascript
@@ -484,11 +485,11 @@
   }
   </script>
   ```
-  * 간단히 설명 하겠습니다. 위와 같이 <code>callback</code> 함수를 화살표 무기명 함수가 아닌 일반 무기명 함수로 사용할 경우,
-  <code>this</code>는 vue가 아니라 무기명 함수가 됩니다.
-  * <code>callback</code> 함수에서 vue를 참조하는 this를 사용하고 싶을 경우 반듯이 화살표 무기명 함수를 사용하세요.
+  * 간단히 설명 하겠습니다. 위와 같이 <code>callback</code> 함수를 화살표 무명 함수가 아닌 일반 무명 함수로 사용할 경우,
+  <code>this</code>는 vue가 아니라 무명 함수가 됩니다.
+  * <code>callback</code> 함수에서 vue를 참조하는 this를 사용하고 싶을 경우 반듯이 화살표 무명 함수를 사용하세요.
 
-  > 관련 게시물을 확인하여 좀더 많은 정보를 얻을 수 있습니다. [블로그 링크]
+    > 관련 게시물을 확인하여 좀더 많은 정보를 얻을 수 있습니다. [블로그 링크]
 
 :arrow_up: [목차](#목차)
 
@@ -524,7 +525,12 @@
   })
 
   // Good
-  const good = ary.map((num) => num + 5)
+  const good = ary.map(num => num + 5)
+
+  // Bad
+  const bad = ary.map((num) => {
+    return num + 5
+  })
   ```
 
 * 5.3. 함수의 인자가 1개인 경우 괄호를 생략할 수 있고, 사용되지 않는 인자는 생략 하여도 됩니다.
@@ -538,7 +544,7 @@
   ary.map((item, index) => item + index)
 
   // it's okay
-  ary.map((, index) => index % 2 == 0)
+  ary.filter((, index) => index % 2 == 0)
   ```
 
 :arrow_up: [목차](#목차)
@@ -637,16 +643,67 @@
   const cp = { ...this.obj } // Best
   ```
   * 위와 같이 object 깊은 복사(shallow copy)를 통해 데이터 참조의 고리를 끊을 수 있게 됩니다.
-  * 때때로 <code>Object.assign()</code> 방식은 깊은 복사가 안될 때가 있습니다. 그것을 피하기 위해 구조 분해를 통해 값을 복사 해주는 것이 가장 좋습니다.
+  * 때때로 <code>Object.assign()</code>은 깊은 복사를 제대로 수행하지 못할 때가 있습니다. 그것을 피하기 위해 구조 분해를 통해 값을 복사 해주는 것이 가장 좋습니다.
+    > 위의 문제는 vue2.x 최신 버전에서 확인되지 않지만 낮은 버전에서 종종 발생합니다.
 
 :arrow_up: [목차](#목차)
 
 ---
 
-## 7. 연산자
-* 7.1. 비교 연산자
+## 7. 문자열
+* 7.1. 문자열은 더블쿼트 <code>""</code>는 사용하지 않습니다. 모든 문자열은 싱글쿼트로 <code>''</code> 처리 합니다
+  ```javascript
+  // Bad
+  const str = "드림인사이트 개발팀"
+
+  // Good
+  const str = '드림인사이트 개발팀'
+  ```
+
+* 7.2. 문자열 연결할 수 있는 방법은 <code>String().concat()</code>, <code>+</code> 등이 있지만, 사용하지 않습니다.
+  ```javascript
+  const company = '드림인사이트'
+  const team = '개발팀'
+
+  // Bad
+  const str1 = company.concat(' ', team)    // '드림인사이트 개발팀'
+  const str2 = company + ' ' + team         // '드림인사이트 개발팀'
+  ```
+
+* 7.3. 템플릿 문자열 조합은 복잡한 문장을 만들때도 매우 편리 하며, 특히 가독성이 좋습니다.
+  ```javascript
+  const gender = 'M'
+  const name = 'Julia'
+  const str = '당신의 성별은'
+  let result = ''
+
+  if (gender === 'F') {
+    result = `${str} 여자이고, 이름은`
+  }
+
+  if (result === '') {
+    result = `${str} 남자이고, 이름은 알 수 없습니다`
+  } else {
+    result = `${result} ${name}입니다`
+  }
+  ```
+
+* 7.4. 문자열이 너무 길 경우, 템플릿 문자열을 활용하여 줄내림을 표현합니다.
+  ```javascript
+  const str = `우리집강아지는 복슬 강아지,
+  학교갔다 돌아오면 멍멍멍,
+  꼬리치며 따라오며 멍멍멍`
+  ```
+  > 다만 위와 같은 방식은 가독성이 떨어지기 때문에, 별도의 문자열 Library를 생성하여 사용하기를 권합니다.
+
+:arrow_up: [목차](#목차)
+
+---
+
+## 8. 연산자
+* 8.1. 비교 연산자
   * 연산자는 정확힌 비교를 위하여 <code>===</code>, <code>!==</code>를 사용하세요.
-  * 문자형은 <code>''</code> 값을 제외한 모든 값을 <code>true</code>로 간주합니다.
+  * 문자형은 <code>''</code> 값을 제외한 모든 값을 <code>true</code>로 간주 됩니다.
   ```javascript
   const apple = 'apple'
   const banana = ''
@@ -667,7 +724,8 @@
   }
   ```
   * 숫자형을 비교 하기 위해서는 해당 값을 필히 Casting(Number, parseInt, parseFloat) 후 비교 해주세요.
-  * 숫자형은 0 이외의 값을 모두 <code>true</code>로 간주 합니다.
+    > 비교 대상의 변수의 자료형을 알 수 없는 경우, 또는
+  * 숫자형은 0 이외의 값을 모두 <code>true</code>로 간주 됩니다.
   ```javascript
   const hour = 3
   const min = '3'
@@ -682,7 +740,7 @@
     ...
   }
   ```
-  * 배열로 선언된 변수는 무조건 <code>true</code>로 간주 합니다. 비교 시에는 <code>Array.length</code>를 통해 값을 변화 여부를 확인 합니다.
+  * 배열로 선언된 변수는 <code>true</code>로 간주 됩니다. 비교 시에는 <code>Array.length</code>를 통해 값을 변화 여부를 확인 합니다.
   ```javascript
   const ary = []
 
@@ -692,7 +750,7 @@
   ```
 
   * <code>null</code>로 초기화 선언된 object는 비교 하기 위해서는 반듯이 값이 <code>null</code>인지 확인하세요.
-  * object 선언시 <code>{}</code>로 값을 할 당하였을 경우 <code>true</code>로 간주합니다.
+  * object 선언시 <code>{}</code>로 값을 할 당하였을 경우 <code>true</code>로 간주 됩니다.
   * object 의 프로퍼티 존재 유무를 확인 할 시에는 <code>undefined</code>로 비교해주세요.
   ```javascript
   const obj = null
@@ -724,5 +782,24 @@
   }
   ```
 
+* 8.2. 논리 연산자
+  * 논리 연산을 통한 값 할당 및 3항 연산 예제
+  ```javascript
+  // 논리 연산을 통한 값 할당
+  const str = 'apple'
+
+  const apple = (str === 'apple') && true       // true
+  const banana = (str !== 'apple') && 'banana'  // false
+  // && 연산은 왼쪽항이 true 일때 오른쪽 항의 값을 할당
+
+  const apple = (str !== 'apple') || 'banana'   // 'banana'
+  const banana = (str === 'apple') || false     // true
+  // || 연산은 왼쪽항이 false 일때 오른쪽 항의 값을 할당
+
+  const apple = (str !== 'apple') ? true : false    // false
+  // 3항 연산은 조건부가 true 일때 :기준 왼쪽값을 할당, false일때 오른쪽 값을 할당
+  ```
 
 :arrow_up: [목차](#목차)
+
+---
