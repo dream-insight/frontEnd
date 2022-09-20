@@ -15,7 +15,7 @@
 4. [함수](#4-함수)
 5. [화살표 함수](#5-화살표-함수)
 6. [오브젝트 프로퍼티](#6-오브젝트-프로퍼티)
-7. [비교와 연산자](#7-비교와-연산자)
+7. [연산자](#7-연산자)
 
 ---
 
@@ -627,7 +627,7 @@
   }
   ```
   * 위의 코드에서 <code>this.obj</code> 값을 복사하여 차후 비교 하기 위한 코드를 작성하였다고 가정 해보겠습니다.
-  * 하지만 중간에 <code>this.obj.text</code> 값을 변경하였고, 이후 <code>console.log()</code>의 값을 확인 해보면 <code>cp.text</code> 값을 확인 해보면 <code>''</code>으로 변해 버린것을 확인할 수 있습니다.
+  * 하지만 중간에 <code>this.obj.text</code> 값을 변경하였고, 이후 <code>cp.text</code> 값을 확인 해보면 <code>''</code> 공백 값으로 변경된 것을 확인할 수 있습니다.
   * 이것은 깊은 복사(Deep copy), 얕은 복사(Shallow copy)에 의하여 발생하는 현상입니다.
     > 깊은 복사와, 얕은 복사에 대해서는 링크를 참조 해주세요. [블로그 링크]
   ```javascript
@@ -692,7 +692,8 @@
   ```
 
   * <code>null</code>로 초기화 선언된 object는 비교 하기 위해서는 반듯이 값이 <code>null</code>인지 확인하세요.
-  * object 초기화에 <code>{}</code>
+  * object 선언시 <code>{}</code>로 값을 할 당하였을 경우 <code>true</code>로 간주합니다.
+  * object 의 프로퍼티 존재 유무를 확인 할 시에는 <code>undefined</code>로 비교해주세요.
   ```javascript
   const obj = null
 
@@ -710,9 +711,17 @@
 
   if (obj) // true
 
-  if (obj.text) // undefined
-
   if (Object.keys(obj).length) // false
+
+  // Bad
+  if (!obj.text) {
+    obj.text = 'dreaminsight'
+  }
+
+  // Good
+  if (obj.text === undefined) {
+    obj.text = 'dreaminsight'
+  }
   ```
 
 
