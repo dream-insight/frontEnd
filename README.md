@@ -1565,7 +1565,7 @@
   ```
 
 * 15.2. Props 정의
-  * 모든 Props에 대해 자료형태를 검수하고 필수 여부를 확인하세요.
+  * 모든 Props에 대해 자료형을 정의하고, 그외 필요한 옵션을 정의 하세요. 자료형외에 필요한 부분이 없다면 자료형 정의만 하여도 무관합니다.
     ``` vue
     <script>
     // componentA
@@ -1598,15 +1598,15 @@
     ```
     > 좀 더 자세항 내용은 링크를 참조 하세요. [Props 유효성 검사](https://v3.ko.vuejs.org/guide/component-props.html#prop-%E1%84%8B%E1%85%B2%E1%84%92%E1%85%AD%E1%84%89%E1%85%A5%E1%86%BC-%E1%84%80%E1%85%A5%E1%86%B7%E1%84%89%E1%85%A1)
 
-  * template 배치시 props명은 케밥캐이스로 정의 하고, 각 형태별 바인딩 방식을 확인하세요.
+  * template 배치시 props명은 케밥캐이스로 정의 하고, 각 props 형태별 바인딩 방식을 확인하세요.
     ```vue
     <template>
       <div>
         <!-- Bad -->
         <component-a
+          maxLength="10"
           :is-hide="true"
           :title="'사과 좋아요!'"
-          :maxLength="10"
           :items="list"
           v-model="apple"
         />
@@ -1637,7 +1637,7 @@
     </script>
     ```
 
-* 15.3. Props의 데이터는 단방향입니다. 컴포넌트간 데이터를 주고 받아야 한다면, 아래와 같이 v-model로 연결 하세요.
+* 15.3. Props의 데이터는 단방향입니다. 컴포넌트간 데이터를 주고 받아야 한다면, v-model로 연결 하세요.
   ```vue
   <template>
     <div>
@@ -1675,7 +1675,9 @@
     }
   }
   </script>
+  ```
 
+  ```vue
   <template>
     <div>
       <!-- Bad -->
@@ -1701,7 +1703,7 @@
   }
   </script>
   ```
-    > ref 연결로 직접 컴포넌트의 모델 값을 참조하는 방식은 오류로 연결 될 확율이 높고, vue framework의 흐름에도 반하는 구현입니다.
+    > ref 연결로, 컴포넌트의 <code>data</code>를 직접 참조하는 방식은 비효율적이고, vue framework의 흐름에도 반합니다.
 
 
 :arrow_up: [목차](#목차)
