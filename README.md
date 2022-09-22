@@ -22,7 +22,8 @@
 10. [반복문](#10-반복문)
 11. [세미콜론](#11-세미콜론)
 12. [공백과 들여쓰기](#12-공백과-들여쓰기)
-13. [Vue 템플릿](#13-Vue-템플릿)
+13. [코멘트(주석)](#13-코멘트(주석))
+14. [Vue 템플릿](#14-Vue-템플릿)
 
 ---
 
@@ -1252,8 +1253,99 @@
 
 ---
 
-## 13. Vue 템플릿
-* 13.1. 테그는 길게 늘어 놓지 않습니다. 계층 구조에 맞도록 내려쓰기와 들여쓰기로 구분해주세요.
+## 13. 코멘트(주석)
+* 13.1. 라인 코멘트는 필요한 라인 윗쪽에 표기 하세요.
+  ```vue
+  <script>
+  export default {
+    data() {
+      return {
+        // Bad
+        text1: '',      // 텍스트를 표시 합니다.
+
+        // Good
+        // 텍스트를 표시 합니다.
+        text1: '',
+      }
+    },
+    created() {
+      // Bad
+      let text = ''       // 텍스트 내용
+
+      // Good
+      // 텍스트 내용
+      let text = ''
+    }
+  }
+  </script>
+  ```
+
+* 13.2. 제어문 전체에 대한 코멘트는 제어문 최상단에 표기하고, 제어 구분마다 표기 시에는 안쪽에 서술해주세요.
+  ```vue
+  <script>
+  export default {
+    created() {
+      // Bad
+      if (isOpen) {   // 마켓이 열려 있으면 사과와 바나나를 삽니다.
+        apple += 1
+        banana += 1
+      } else {        // 그렇지 않을 경우 편의점에가서 우유만 삽니다.
+        milk += 1
+      }
+
+      // Good
+      // 마켓 오픈 여부에 따라 다른 상품을 구매 합니다.
+      if (isOpen) {
+        // 열려 있을 경우 사과와 바나나를 삽니다.
+        apple += 1
+        banana += 1
+      } else {
+        // 그렇지 않을 경우 편의점에가서 우유만 삽니다.
+        milk += 1
+      }
+    }
+  }
+  </script>
+  ```
+
+* 13.3. 긴 코멘트가 필요한 경우 <code>/** */</code>로 기술합니다.
+  ```vue
+  <script>
+  export default {
+    methods: {
+      // Bad
+      // 마켓이 열려 있으면 사과와 바나나를 사도록하고,
+      // 그렇지 않을 경우 편의점에 가서 우유를 삽니다.
+      // 만약 편의 점도 닫혀 있다면 집으로 돌아 옵니다.
+      goMart(isOpen) {
+        // ...
+        return total
+      },
+      // Good
+      /**
+       * 마켓이 열려 있으면 사과와 바나나를 사도록하고,
+       * 그렇지 않을 경우 편의점에 가서 우유를 삽니다.
+       * 만약 편의 점도 닫혀 있다면 집으로 돌아 옵니다.
+       *
+       * @param {Boolean} isOpen
+       * @return {Number} 구매한 총 수량을 반환
+       */
+      goMart(isOpen) {
+        // ...
+        return total
+      }
+    }
+  }
+  </script>
+  ```
+    > 함수의 경우 위와 같은 방식으로 전달인자 및 리턴값에 대해 기술 해주세요.
+
+:arrow_up: [목차](#목차)
+
+---
+
+## 14. Vue 템플릿 문법
+* 14.1. 테그는 길게 늘어 놓지 않습니다. 계층 구조에 맞도록 내려쓰기와 들여쓰기로 구분해주세요.
   ```vue
   <template>
     <div>
@@ -1295,16 +1387,85 @@
   </template>
   ```
 
-* 13.2. 디렉티브 중 약어가 사용 가능한 것은 모두 약어로 표시하세요.
+* 14.2. html 싱글 톤과 닫기를 명확히 사용합니다.
   ```vue
   <template>
     <div>
-        <!-- Good -->
+      <!-- Bad -->
+      <div v-html="rawHtml" />
+      <input type="button">
+
+      <!-- Good -->
+      <div v-html="rawHtml"></div>
+      <input type="button" />
+    </div>
+  </template>
+  ```
+    > 닫기가 있는 태그는 필히 닫기를 해주고, 싱글 톤은 <code>< /></code>형태로 닫아 줍니다.
+
+* 14.3. <code>v-bind, v-on</code> 디렉티브는 약어<code>:, @</code> 표기 하고, 동적 전달은 지양합니다.
+  ```vue
+  <template>
+    <div>
+        <!-- Bad -->
         <a href="#" v-on:click.prevent="setText">눌러주세요</a>
+        <check-button v-bind:items="data" />
+
+        <!-- Good -->
+        <a href="#" @click.prevent="setText">눌러주세요</a>
+        <check-button :items="data" />
+
+        <!-- not use -->
+        <check-button :[prop]="whatToDo" @[event]="action" />
+    </div>
+  </template>
+  ```
+    > 동적 전달을 사용할 경우 코드가 불분명해지고, 가독성이 떨어집니다.
+
+* 14.4. 조건부 랜더링 구현시에는 의미 없는 태그 사용을 자제하세요.
+  ```vue
+  <template>
+    <div>
+      <!-- Bad -->
+      <div v-if="number == 1">
+        <span>1번 입구로 가세요.</span>
+      </div>
+      <div v-else-if="number == 2">
+        <span>2번 입구로 가세요.</span>
+      </div>
+      <div v-else-if="number == 3">
+        <span>3번 입구로 가세요.</span>
+      </div>
+      <div v-else>
+        <span>입장이 불가합니다.</span>
+      </div>
+
+      <!-- Good -->
+      <span v-if="number == 1">1번 입구로 가세요.</span>
+      <span v-else-if="number == 2">2번 입구로 가세요.</span>
+      <span v-else-if="number == 3">3번 입구로 가세요.</span>
+      <span v-else>입장이 불가합니다.</span>
     </div>
   </template>
   ```
 
+
+* 14.5. <code>v-for</code>와 <code>v-if</code> 함께 사용하지 마세요.
+  ```vue
+  <template>
+    <div>
+        <!-- Bad -->
+        <div v-for="item in list" v-if="item % 2 == 0">
+          {{ item }}
+        </div>
+
+        <!-- Good -->
+        <template v-for="item in list">
+          <div v-if="item % 2 == 0">{{ item }}</div>
+        </template>
+    </div>
+  </template>
+  ```
 
 :arrow_up: [목차](#목차)
 
