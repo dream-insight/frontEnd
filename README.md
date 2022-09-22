@@ -20,6 +20,8 @@
 8. [연산자](#8-연산자)
 9. [블럭](#9-블럭)
 10. [반복문](#10-반복문)
+11. [세미콜론](#11-세미콜론)
+12. [공백과 들여쓰기](#12-공백과-들여쓰기)
 
 ---
 
@@ -286,7 +288,8 @@
     }
   }
   ```
-  > 위의 예제는 개발을 하면서 간혹 코드를 한꺼번에 수정해야 하는 때도 있다는 것을 알고 있습니다. 그러한 경험이 있는 개발자는 위와 같은 코드 나열 방식이 왜 안좋은지 익히 알고 있고 가독성에서도 좋지 않다는 것도 알 수 있습니다.
+  > 우리는 코드를 작성하면서 간혹 비슷한 형태의 여러코드를 수정해야 하는 때도 있다는 것을 알고 있습니다.<br>
+  그러한 경험이 있는 개발자는 위와 같은 코드 나열 방식이 왜 안 좋은지 익히 알고 있고습니다.
 
 :arrow_up: [목차](#목차)
 
@@ -354,8 +357,7 @@
     ...
   }
   ```
-  > 함수 선언 방식과, 함수식으로 정의 하는 방식은 hoist 되는 방식이 다릅니다. 위와 같이 사용하는 이유는 링크를 참조 하세요.<br>
-  -> [함수 선언 방식에 따른 hoisting 차이](https://github.com/tipjs/javascript-style-guide#%ED%95%A8%EC%88%98functions)
+  > 함수 선언 방식과, 함수식으로 정의 하는 방식은 hoist 되는 방식이 다릅니다.
     ```javascript
     // it's working
     getCodeName('tag')
@@ -575,7 +577,7 @@
 ---
 
 ## 6. 오브젝트 프로퍼티
-* 6.1. 프로퍼티에 값을 할당할 시 단축구문 사용하세요.
+* 6.1. 프로퍼티에 값을 할당할 시 가능한한 단축구문 사용하세요.
   ```javascript
   let text = '드림인사이트'
   let value = 'dreaminsight'
@@ -660,9 +662,8 @@
   * 이것은 깊은 복사(Deep copy), 얕은 복사(Shallow copy)에 의하여 발생하는 현상입니다.
     > 깊은 복사와, 얕은 복사에 대해서는 링크를 참조 해주세요. [블로그 링크]
     ```javascript
-    //
-    const cp = Object.assign({}, this.obj) // Sometime not work
-    const cp = JSON.parse(JSON.stringify(this.obj)) // Good
+    const cp = JSON.parse(JSON.stringify(this.obj)) // it's okay
+    const cp = Object.assign({}, this.obj) // Good
     const cp = { ...this.obj } // Best
     ```
   * 위와 같이 object 깊은 복사(shallow copy)를 통해 데이터 참조의 고리를 끊을 수 있게 됩니다.
@@ -744,8 +745,8 @@
       ...
     }
     ```
-  * 숫자형을 비교 하기 위해서는 해당 값을 필히 Casting(Number, parseInt, parseFloat) 후 비교 해주세요.
-    > 비교 대상의 변수의 자료형을 알 수 없는 경우, 또는
+  * 숫자형을 비교 하기 위해서는 해당 값을 필히 Type Casting(Number, parseInt, parseFloat) 후 비교 해주세요.
+    > 비교 대상의 변수의 자료형을 알 수 없는 경우, 또는 API를 통해 받은 값
   * 숫자형은 0 이외의 값을 모두 <code>true</code>로 간주 됩니다.
     ```javascript
     const hour = 3
@@ -770,23 +771,11 @@
     if (ary.length) // false
     ```
 
-  * <code>null</code>로 초기화 선언된 object는 비교 하기 위해서는 반듯이 값이 <code>null</code>인지 확인하세요.
   * 오브젝트 선언시 빈 오브젝트(<code>{}</code>)로 값을 할당하였을 경우 <code>true</code>로 간주 됩니다.
   * 오브젝트의 프로퍼티가 있는지 확인 하기 위해서는 꼭 <code>Object.keys().length</code>로 검수하세요.
   * 오브젝트의 특정 프로퍼티 존재 유무를 확인 할 시에는 <code>undefined</code>로 비교해주세요.
+  * 만약, <code>null</code>로 초기화 선언된 object는 비교 하기 위해서는 반듯이 값이 <code>null</code>인지 확인하세요.
     ```javascript
-    const obj = null
-
-    // Bad
-    if (!obj) {
-      ...
-    }
-
-    // Good
-    if (obj === null) {
-      ...
-    }
-
     const obj = {}
 
     if (obj) // true
@@ -801,6 +790,18 @@
     // Good
     if (obj.text === undefined) {
       obj.text = 'dreaminsight'
+    }
+
+    const obj = null
+
+    // Bad
+    if (!obj) {
+      ...
+    }
+
+    // Good
+    if (obj === null) {
+      ...
     }
     ```
 
@@ -827,7 +828,7 @@
     const pineApple = true
 
     // Bad
-    let buyCount = apple ? 10 : pine ? 2 : 0
+    let buyCount = apple ? 10 : pineApple ? 2 : 0
 
     // Good
     let buyCount = 0
@@ -845,7 +846,7 @@
 ---
 
 ## 9. 블럭
-* 9.1. 블럭이 필요한 모든 문법에서 블럭을 사용하세요. 람다식과 오브젝트 변수 선언 시 예외로 합니다.
+* 9.1. 블럭이 필요한 모든 문법에서 블럭을 사용하세요. 람다식은 예외로 합니다.
   ```javascript
   // Bad
   function isOpenMarket() {
@@ -939,8 +940,7 @@
   // Best
   const sum = numbers.reduce((total, num) => total + num, 0)
   ```
-  > 위의 코드는 AirBnB의 JS Convention 코드를 인용하였습니다.<br>
-  > [링크 참조](https://github.com/tipjs/javascript-style-guide#%EC%9D%B4%ED%84%B0%EB%A0%88%EC%9D%B4%ED%84%B0%EC%99%80-%EC%A0%9C%EB%84%88%EB%A0%88%EC%9D%B4%ED%84%B0iterators-and-generators)
+  > 위의 코드는 AirBnB의 JS Convention 코드를 인용하였습니다. [링크 참조](https://github.com/tipjs/javascript-style-guide#%EC%9D%B4%ED%84%B0%EB%A0%88%EC%9D%B4%ED%84%B0%EC%99%80-%EC%A0%9C%EB%84%88%EB%A0%88%EC%9D%B4%ED%84%B0iterators-and-generators)
 
 * 10.2. 특히 오브젝트 프로퍼티 탐색시 이터러블이 종종 사용 됩니다.
   ```javascript
@@ -1023,7 +1023,7 @@
     ```javascript
     let doms = ''
 
-    for (let i = 0; i < data.length; i+++) {
+    for (let i = 0; i < data.length; i++) {
       doms += `<div>${data[i].text}`
 
       if (data[i].sub !== undefined) {
@@ -1045,6 +1045,7 @@
 
         doms += '</div>'
       }
+
       doms += '</div>'
     }
     ```
@@ -1073,6 +1074,157 @@
     ```
   * 위와 같이 코드의 가독성이 좋아지고, 무엇보다 무한루프 발생 확율도 매우 낮습니다.
 
+:arrow_up: [목차](#목차)
+
+---
+
+## 11. 세미콜론
+  * 생략 합니다.
+    > webpack을 통해 빌드 될때 세미콜론은 자동으로 생성됩니다. 웹팩의 수고를 고맙게 생각합시다.
+    ```javascript
+    const type = 'test'
+    let server = ''
+
+    // Bad
+    switch (type) {
+      case 'development': server = '192.168.0.1'; break
+      case 'test': server = '111.222.123.255'; break
+      case 'production': server = '100.200.123.255'
+    }
+
+    // Good
+    switch (type) {
+      case 'development':
+        server = '192.168.0.1'
+        break
+      case 'test':
+        server = '111.222.123.255'
+        break
+      case 'production':
+        server = '100.200.123.255'
+    }
+
+    ```
+    > 이것은 webpack을 통한 vuejs 개발시에만 해당 됩니다. 혹여, 순수 js를 작성할 상황이 생긴다면 세미콜론을 사용해주세요.
+
+:arrow_up: [목차](#목차)
+
+---
+
+## 12. 공백과 들여쓰기
+
+* 12.1. 들여쓰기는 <code>Tab</code>이 아닌 <code>Space</code>로 정하고, 2칸으로 설정하세요.
+  ```javascript
+  // Bad
+  if (isOpen) {
+  ····// do something
+  }
+
+  // Bad (Tab)
+  if (isOpen) {
+  →→→→// do something
+  // or
+  →→// do something
+  }
+
+  // Good
+  if (isOpen) {
+  ··// do something
+  }
+  ```
+* 12.2. 연산자, 등호, 제어문, 콤마 뒤에는 공백으로 구분하세요.
+  ```javascript
+  // Bad
+  const isOpen=true
+  const num=10
+  const ary=[1,2,3,4,5]
+  const obj={text:'text',value:10}
+
+  // Bad
+  if(isOpen){
+    num=num/2
+  }
+
+  // Bad
+  for(let i=0;i<num;i++){
+    if(num%2==0) num++
+  }
+
+  // Bad
+  const test=()=>num
+
+  // Good
+  const isOpen = true
+  const num = 10
+  const ary = [1, 2, 3, 4, 5]
+  const obj = {
+    text: 'text',
+    value: 10
+  }
+
+  // Good
+  if (isOpen) {
+    num = num / 2
+  }
+
+  // Good
+  for (let i = 0; i < num; i++) {
+    if (num % 2 == 0) {
+      num++
+    }
+  }
+
+  // Bad
+  const test = () => num
+  ```
+* 12.3. 괄호, 대괄호(배열) 안쪽 앞뒤로 공백을 삽입하지마세요.
+  ```javascript
+  // Bad
+  const timeList = [ 0, 1, 2, 3, 4 ]
+
+  // Bad
+  if ( isOpen ) {
+    ...
+  }
+
+  // Bad
+  const date = ( isOpen ) ? new Date() : false
+
+  // Bad
+  function getTime( time ) {
+    return timeList[ time ]
+  }
+
+
+  // Good
+  const timeList = [0, 1, 2, 3, 4]
+
+  // Good
+  if (isOpen) {
+    ...
+  }
+
+  // Good
+  const date = (isOpen) ? new Date() : false
+
+  // Good
+  function getTime(time) {
+    return timeList[time]
+  }
+  ```
+* 12.4. 중괄호({}) 안쪽 앞뒤로 공백을 삽입해주세요.
+  ```javascript
+  // Bad
+  import {getDateTime} from 'datetime'
+  const {result, total} = json
+  const obj = {text: '', value: ''}
+
+  // Good
+  import { getDateTime } from 'datetime'
+  const { result, total } = json
+  const obj = { text: '', value: '' }
+  ```
+  > 되도록이면 오브젝트 선언시에는 중괄호를 블럭문처럼 사용하세요. 가독성이 좋아집니다.
 
 :arrow_up: [목차](#목차)
 
