@@ -24,6 +24,7 @@
 12. [공백과 들여쓰기](#12-공백과-들여쓰기)
 13. [코멘트(주석)](#13-코멘트(주석))
 14. [Vue 템플릿](#14-Vue-템플릿)
+15. [컴포넌트(SFC)](#15-컴포넌트(SFC))
 
 ---
 
@@ -1450,22 +1451,258 @@
   ```
 
 
-* 14.5. <code>v-for</code>와 <code>v-if</code> 함께 사용하지 마세요.
+* 14.5. <code>v-for</code>와 <code>v-if</code>를 같은 테그에 함께 사용하지 마세요.
   ```vue
   <template>
     <div>
         <!-- Bad -->
-        <div v-for="item in list" v-if="item % 2 == 0">
+        <div :key="item" v-for="item in list" v-if="item % 2 == 0">
           {{ item }}
         </div>
 
         <!-- Good -->
         <template v-for="item in list">
-          <div v-if="item % 2 == 0">{{ item }}</div>
+          <div :key="item" v-if="item % 2 == 0">{{ item }}</div>
         </template>
     </div>
   </template>
   ```
+
+* 14.6. 속성(Attribute) 및 디렉티브 나열 순서를 지켜 주세요. 나열되는 종류가 많을 경우 개행 및 들여쓰기로 구분해주세요.
+  ```vue
+  <template>
+    <div>
+      <!-- Bad -->
+      <div id="Mart" v-if="isOpen" :class="{ disabled: isSunday }" @click="checkItOut">{{ letsGo }}</div>
+
+      <!-- Good -->
+      <div
+        id="Mart"
+        :class="{ disabled: isSunday }"
+        @click="checkItOut"
+        v-if="isOpen" >
+        {{ letsGo }}
+      </div>
+    </div>
+  </template>
+  ```
+  > 디렉티브 나열 순서: none bind -> v-bind(:) -> v-on(@) -> v-html -> v-model -> v-for -> v-if
+
+* 14.7. 같은 속성을 중복하여 사용하지 마세요.
+  ```vue
+  <template>
+    <div>
+      <!-- Bad -->
+      <div class="default" :class="{ isActive: active }" v-html="html"></div>
+
+      <!-- Good -->
+      <div :class="['default', { isActive: active }]" v-html="html"></div>
+    </div>
+  </template>
+  ```
+
+* 14.8. 템플릿 안에 복잡한 수식 사용은 지양합니다.
+  ```vue
+  <template>
+    <div>
+      <!-- Bad -->
+      <div v-for="num in numbers">
+        {{ num + (num / 100 * 10) }}
+      </div>
+
+      <!-- Good -->
+      <div v-for="num in numbers">
+        {{ getCalculate(num) }}
+      </div>
+    </div>
+  </template>
+
+  <script>
+  export default {
+    data() {
+      return {
+        numbers: [1, 2, 3, 4, 5, 6],
+      }
+    },
+    methods: {
+      getCalculate() {
+        return num + (num / 100 * 10)
+      }
+    }
+  }
+  </script>
+  ```
+  > 수식이 template 안에 들어가게 되면 코드 가독성이 매우 떨어집니다.
+
+
+:arrow_up: [목차](#목차)
+
+---
+
+## 15. 컴포넌트(SFC)
+
+* 15.1. 컴포넌트 import 시에는 카멜캐이스로, template 배치시에 케밥캐이스로 구분 합니다.
+  ```vue
+  <template>
+    <div>
+      <!-- Bad -->
+      <check_button />
+      <CheckButton />
+
+      <!-- Good -->
+      <check-button />
+    </div>
+  </template>
+
+  <script>
+  // Bad
+  import check_button from '@/components/checkButton'
+  import CheckButton from '@/components/checkButton'
+
+  // Good
+  import checkButton from '@/components/checkButton'
+  </script>
+  ```
+
+* 15.2. Props 정의
+  * 모든 Props에 대해 자료형태를 검수하고 필수 여부를 확인하세요.
+    ``` vue
+    <script>
+    // componentA
+    export default {
+      // Bad
+      props: ['value', 'maxLength', 'title', 'isHide'],
+
+      // Good
+      props: {
+        value: {
+          type: [Number, String],
+          required: true,
+        },
+        maxLength: Number,
+        title: {
+          type: String,
+          default: '기본 Text',
+        },
+        isHide: {
+          type: Boolean,
+          default: false,
+        },
+        items: {
+          type: Array,
+          required: true,
+        }
+      }
+    }
+    </script>
+    ```
+    > 좀 더 자세항 내용은 링크를 참조 하세요. [Props 유효성 검사](https://v3.ko.vuejs.org/guide/component-props.html#prop-%E1%84%8B%E1%85%B2%E1%84%92%E1%85%AD%E1%84%89%E1%85%A5%E1%86%BC-%E1%84%80%E1%85%A5%E1%86%B7%E1%84%89%E1%85%A1)
+
+  * template 배치시 props명은 케밥캐이스로 정의 하고, 각 형태별 바인딩 방식을 확인하세요.
+    ```vue
+    <template>
+      <div>
+        <!-- Bad -->
+        <component-a
+          :is-hide="true"
+          :title="'사과 좋아요!'"
+          :maxLength="10"
+          :items="list"
+          v-model="apple"
+        />
+
+        <!-- Good -->
+        <component-a
+          is-hide
+          title="사과 좋아요!"
+          :max-length="10"
+          :items="list"
+          v-model="apple"
+        />
+      </div>
+    </template>
+
+    <script>
+    import componentA from './componentA'
+
+    export default {
+      components: { componentA },
+      data() {
+        return {
+          apple: '',
+          list: ['a', 'b', 'c', 'd', 'e', 'f']
+        }
+      }
+    }
+    </script>
+    ```
+
+* 15.3. Props의 데이터는 단방향입니다. 컴포넌트간 데이터를 주고 받아야 한다면, 아래와 같이 v-model로 연결 하세요.
+  ```vue
+  <template>
+    <div>
+      <!-- Bad -->
+      <input
+        type="text"
+        v-model="val"
+      />
+
+      <!-- Good -->
+      <input
+        type="text"
+        :value="val"
+        @input="updateValue"
+      />
+    </div>
+  </template>
+
+  <script>
+  // inputField component
+  export default {
+    name: 'inputField',
+    props: {
+      text: [Number],
+      value: [Number, String],
+    },
+    data: () => ({
+      val: '',
+    }),
+    methods: {
+      updateValue(event) {
+        // 정상적인 model 연결을 통한 양방한 바인딩
+        this.$emit('input', event.target.value)
+      }
+    }
+  }
+  </script>
+
+  <template>
+    <div>
+      <!-- Bad -->
+      <input-field ref="input" @input="inputValue" />
+
+      <!-- Good -->
+      <input-field v-model="text" />
+    </div>
+  </template>
+
+  <script>
+  export default {
+    data() {
+      return {
+        text: '',
+      }
+    },
+    methods: {
+      inputValue() {
+        this.text = this.$refs.input.val
+      },
+    }
+  }
+  </script>
+  ```
+    > ref 연결로 직접 컴포넌트의 모델 값을 참조하는 방식은 오류로 연결 될 확율이 높고, vue framework의 흐름에도 반하는 구현입니다.
+
 
 :arrow_up: [목차](#목차)
 
