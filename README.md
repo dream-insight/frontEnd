@@ -22,14 +22,17 @@
 10. [반복문](#10-반복문)
 11. [세미콜론](#11-세미콜론)
 12. [공백과 들여쓰기](#12-공백과-들여쓰기)
+13. [Vue 템플릿](#13-Vue-템플릿)
 
 ---
 
 ## 1. 기본 형태
 * VueJS v2.x Framework 기본 형식은 아래와 같이 지켜 주세요.
-  ```javascript
+  ```vue
   <template>
-    ...
+    <div>
+      ...
+    </div>
   </template>
 
   <script>
@@ -1140,18 +1143,16 @@
   const ary=[1,2,3,4,5]
   const obj={text:'text',value:10}
 
-  // Bad
   if(isOpen){
     num=num/2
   }
 
-  // Bad
   for(let i=0;i<num;i++){
     if(num%2==0) num++
   }
 
-  // Bad
   const test=()=>num
+
 
   // Good
   const isOpen = true
@@ -1162,12 +1163,10 @@
     value: 10
   }
 
-  // Good
   if (isOpen) {
     num = num / 2
   }
 
-  // Good
   for (let i = 0; i < num; i++) {
     if (num % 2 == 0) {
       num++
@@ -1182,15 +1181,12 @@
   // Bad
   const timeList = [ 0, 1, 2, 3, 4 ]
 
-  // Bad
   if ( isOpen ) {
     ...
   }
 
-  // Bad
   const date = ( isOpen ) ? new Date() : false
 
-  // Bad
   function getTime( time ) {
     return timeList[ time ]
   }
@@ -1199,20 +1195,17 @@
   // Good
   const timeList = [0, 1, 2, 3, 4]
 
-  // Good
   if (isOpen) {
     ...
   }
 
-  // Good
   const date = (isOpen) ? new Date() : false
 
-  // Good
   function getTime(time) {
     return timeList[time]
   }
   ```
-* 12.4. 중괄호({}) 안쪽 앞뒤로 공백을 삽입해주세요.
+* 12.4. 중괄호(<code>{}</code>) 안쪽 앞뒤로 공백을 삽입해주세요.
   ```javascript
   // Bad
   import {getDateTime} from 'datetime'
@@ -1225,6 +1218,74 @@
   const obj = { text: '', value: '' }
   ```
   > 되도록이면 오브젝트 선언시에는 중괄호를 블럭문처럼 사용하세요. 가독성이 좋아집니다.
+  * 이것은 템플릿 문법에도 적용됩니다.
+    ```html
+    <template>
+      <!-- Bad -->
+      <div>{{text}}</div>
+
+      <!-- Good -->
+      <div>{{ text }}<div>
+    </template>
+    ```
+
+:arrow_up: [목차](#목차)
+
+---
+
+## 13. Vue 템플릿
+* 13.1. 테그는 길게 늘어 놓지 않습니다. 계층 구조에 맞도록 내려쓰기와 들여쓰기로 구분해주세요.
+  ```javascript
+  <template>
+    <div>
+      <!-- Bad -->
+      <ul>
+        <li>text1</li><li>text2</li><li>text3</li>
+      </ul>
+      <table>
+        <thead><tr><td>text1</td></tr></thead>
+        <tbody>
+          <tr><td><span>text2</span></td></tr>
+          <tr><td>text3</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Good -->
+      <ul>
+        <li>text1</li>
+        <li>text2</li>
+        <li>text3</li>
+      </ul>
+
+      <table>
+        <thead>
+          <tr>
+            <td>text1</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <span>text2</span>
+            </td>
+            <td>text3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </template>
+  ```
+
+* 13.2. 디렉티브 중 약어가 사용 가능한 것은 모두 약어로 표시하세요.
+  ```javascript
+  <template>
+    <div>
+        <!-- Good -->
+        <a href="#" v-on:click.prevent="setText">눌러주세요</a>
+    </div>
+  </template>
+  ```
+
 
 :arrow_up: [목차](#목차)
 
