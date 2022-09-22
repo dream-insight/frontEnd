@@ -106,7 +106,7 @@
 
   * javascript의 예약어를 변수나 함수, class명으로 사용 하지 않습니다.
       > 단, plugin, component를 참조하여 호출 하는 경우는 허용 합니다.
-      ```javascript
+      ```vue
       <script>
       import modal from '@/components/modal'
 
@@ -191,7 +191,7 @@
 
 ## 3. 변수 선언과 데이터형
 * 3.1. 기본 형태의 Vue v2.x은 Type Script를 사용하기 어려운 관계로 필히 변수 선언시 타입에 맞게 정의 합니다.
-  ```javascript
+  ```vue
   export default {
     data: () => ({
       name: '',       // String -> 공백
@@ -208,7 +208,8 @@
   <code>null</code> 타입 선언시 아래의 항목을 준수하여주세요.
 
   * 비교, 제어시 필히 <code>null</code>로 비교 해야 하며, 초기화시에도 <code>null</code>로 지정합니다.
-  ```javascript
+  ```vue
+  <script>
   export default {
     data() {
       return {
@@ -232,13 +233,15 @@
       }
     }
   }
+  </script>
   ```
 
 * 3.3. 변수 scope
   * 변수 선언시에는 <code>let, const</code> block scoped 선언 하고, <code>var</code>로 선언하지 마세요.
   * 상수는 <code>const</code>사용 하고, 이는 <code>export default</code> 블럭 밖에서 선언이 가능 합니다.
   * 재할당 가능한 변수는 <code>let</code>으로 선언 하고, <code>export default</code> 블럭 밖에서 선언하지 않도록 합니다.
-  ```javascript
+  ```vue
+  <script>
   // it's okay
   const seed = 1
 
@@ -271,9 +274,11 @@
       }
     }
   }
+  </script>
   ```
 * 3.4. 변수 선언 시 콤마를 사용하여 다중 선언 하는 방식은 좋지 않습니다.
-  ```javascript
+  ```vue
+  <script>
   export default {
     methods: {
       getData() {
@@ -290,6 +295,7 @@
       }
     }
   }
+  </script>
   ```
   > 우리는 코드를 작성하면서 간혹 비슷한 형태의 여러코드를 수정해야 하는 때도 있다는 것을 알고 있습니다.<br>
   그러한 경험이 있는 개발자는 위와 같은 코드 나열 방식이 왜 안 좋은지 익히 알고 있고습니다.
@@ -302,7 +308,8 @@
 * 4.1. watch, computed, methods 등에 함수 정의시 단축구문을 이용하세요.
   > 단, computed에 간단한 연산 반환에 대해서는 람다식을 허용합니다.
 
-  ```javascript
+  ```vue
+  <script>
   export default {
     data() {
       return {
@@ -341,6 +348,7 @@
       }
     }
   }
+  </script>
   ```
 
 * 4.2. 함수선언과 함수식을 구분하여 사용하세요.
@@ -386,7 +394,8 @@
   * 대부분의 언어에서는 함수에 대해 명확히 정의 하기를 요구합니다.
   * 반환 값이 있는 함수 <code>return int, str, bool</code> 등등
   * 단순 기능 수행의 <code>void</code> 입니다.
-    ```javascript
+    ```vue
+    <script>
     export default {
       data() {
         return {
@@ -411,10 +420,12 @@
         }
       }
     }
+    </script>
     ```
   * 위 두가지 함수는 거의 비슷한 일을 하지만, 명백히 다른 함수 입니다.
   * 우리는 보통 위와 같이 사용 하고 있지만, 쉽게 아래와 같은 실수를 범하게 됩니다.
-    ```javascript
+    ```vue
+    <script>
     export default {
       data() {
         return {
@@ -444,6 +455,7 @@
         }
       }
     }
+    </script>
     ```
   * 위와 같이 함수 수행을 종료하고자 <code>return false</code>를 사용하는 것은 아무 의미 없습니다.
   * 따라서 void 함수 수행을 종료하고자 할 때는 오직 <code>return</code>으로 종료시켜 주세요.
@@ -451,7 +463,8 @@
 * 4.4. 함수의 인자(parameters)는 참조로만 사용하세요.
   * 함수의 전달 인자에 default 값을 사용하여, 제어 문에서 그 값을 비교하세요.
   * 전달 인자의 값을 직접적으로 변이 하여 사용하게 되면, 찾기 힘든 오류가 발생 할 수도 있습니다.
-    ```javascript
+    ```vue
+    <script>
     export default {
       created() {
         let size = this.getArraySize()
@@ -472,12 +485,13 @@
         }
       }
     }
+    </script>
     ```
 
 * 4.5. this의 사용
   * 당신이 아직 초급자리면 this에 대해서 이해하는데 시간이 필요할 수도 있습니다.
   * 아래의 코드를 보고 간단히 vuejs의 this를 손쉽게 사용하세요.
-    ```javascript
+    ```vue
     <template>
       <div>
         <p><button type="button" ref="button1">this !== vue</button></p>
@@ -627,7 +641,8 @@
 * 6.4. data에 선언된 오브젝트
   * data에 선언된 변수(properties)들은 우리에게 매운 편리한 기능을 재공 합니다.
   * 다만 그 편리함이 우리를 불편하게도 합니다. 아래의 예를 보겠습니다.
-    ```javascript
+    ```vue
+    <script>
     export default {
       data() {
         return {
@@ -659,6 +674,7 @@
         }
       }
     }
+    </script>
     ```
   * 위의 코드에서 <code>this.obj</code> 값을 복사하여 차후 비교 하기 위한 코드를 작성하였다고 가정 해보겠습니다.
   * 하지만 중간에 <code>this.obj.text</code> 값을 변경하였고, 이후 <code>cp.text</code> 값을 확인 해보면 <code>''</code> 공백 값으로 변경된 것을 확인할 수 있습니다.
@@ -1176,6 +1192,7 @@
   // Bad
   const test = () => num
   ```
+
 * 12.3. 괄호, 대괄호(배열) 안쪽 앞뒤로 공백을 삽입하지마세요.
   ```javascript
   // Bad
@@ -1205,6 +1222,7 @@
     return timeList[time]
   }
   ```
+
 * 12.4. 중괄호(<code>{}</code>) 안쪽 앞뒤로 공백을 삽입해주세요.
   ```javascript
   // Bad
@@ -1217,6 +1235,7 @@
   const { result, total } = json
   const obj = { text: '', value: '' }
   ```
+
   > 되도록이면 오브젝트 선언시에는 중괄호를 블럭문처럼 사용하세요. 가독성이 좋아집니다.
   * 이것은 템플릿 문법에도 적용됩니다.
     ```html
@@ -1235,7 +1254,7 @@
 
 ## 13. Vue 템플릿
 * 13.1. 테그는 길게 늘어 놓지 않습니다. 계층 구조에 맞도록 내려쓰기와 들여쓰기로 구분해주세요.
-  ```javascript
+  ```vue
   <template>
     <div>
       <!-- Bad -->
@@ -1277,7 +1296,7 @@
   ```
 
 * 13.2. 디렉티브 중 약어가 사용 가능한 것은 모두 약어로 표시하세요.
-  ```javascript
+  ```vue
   <template>
     <div>
         <!-- Good -->
