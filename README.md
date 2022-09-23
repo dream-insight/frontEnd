@@ -25,6 +25,7 @@
 13. [코멘트(주석)](#13-코멘트(주석))
 14. [Vue 템플릿](#14-Vue-템플릿)
 15. [컴포넌트(SFC)](#15-컴포넌트(SFC))
+16. [이벤트 버스](#16-이벤트-버스)
 
 ---
 
@@ -1346,7 +1347,7 @@
 ---
 
 ## 14. Vue 템플릿 문법
-* 14.1. 테그는 길게 늘어 놓지 않습니다. 계층 구조에 맞도록 내려쓰기와 들여쓰기로 구분해주세요.
+* 14.1. 테그는 길게 늘어 놓지 않습니다. 계층 구조에 맞도록 개행과 들여쓰기로 구분해주세요.
   ```vue
   <template>
     <div>
@@ -1388,7 +1389,7 @@
   </template>
   ```
 
-* 14.2. html 싱글 톤과 닫기를 명확히 사용합니다.
+* 14.2. 태그 싱글 톤과 닫기를 명확히 사용합니다.
   ```vue
   <template>
     <div>
@@ -1408,16 +1409,16 @@
   ```vue
   <template>
     <div>
-        <!-- Bad -->
-        <a href="#" v-on:click.prevent="setText">눌러주세요</a>
-        <check-button v-bind:items="data" />
+      <!-- Bad -->
+      <a href="#" v-on:click.prevent="setText">눌러주세요</a>
+      <check-button v-bind:items="data" />
 
-        <!-- Good -->
-        <a href="#" @click.prevent="setText">눌러주세요</a>
-        <check-button :items="data" />
+      <!-- Good -->
+      <a href="#" @click.prevent="setText">눌러주세요</a>
+      <check-button :items="data" />
 
-        <!-- not use -->
-        <check-button :[prop]="whatToDo" @[event]="action" />
+      <!-- not use -->
+      <check-button :[prop]="whatToDo" @[event]="action" />
     </div>
   </template>
   ```
@@ -1455,15 +1456,15 @@
   ```vue
   <template>
     <div>
-        <!-- Bad -->
-        <div :key="item" v-for="item in list" v-if="item % 2 == 0">
-          {{ item }}
-        </div>
+      <!-- Bad -->
+      <div :key="item" v-for="item in list" v-if="item % 2 == 0">
+        {{ item }}
+      </div>
 
-        <!-- Good -->
-        <template v-for="item in list">
-          <div :key="item" v-if="item % 2 == 0">{{ item }}</div>
-        </template>
+      <!-- Good -->
+      <template v-for="item in list">
+        <div :key="item" v-if="item % 2 == 0">{{ item }}</div>
+      </template>
     </div>
   </template>
   ```
@@ -1704,6 +1705,47 @@
   </script>
   ```
     > ref 연결로, 컴포넌트의 <code>data</code>를 직접 참조하는 방식은 비효율적이고, vue framework의 흐름에도 반합니다.
+
+
+:arrow_up: [목차](#목차)
+
+---
+
+## 16. 이벤트 버스
+
+* 16.1. 이벤트 버스(Event Bus)는 사용하지 않습니다.
+  * 이벤트 버스란?
+    ```javascript
+    // main.js
+    Vue.prototype.eventBus = new Vue()
+    ```
+
+    ```vue
+    <script>
+    // componentA.vue
+    export default {
+      mounted() {
+        this.$eventBus.$on('onPush', (options) => {
+          // something to do
+        })
+      }
+    }
+    </script>
+
+    <script>
+    // componentB.vue
+    export default {
+      methods: {
+        pushMessage() {
+          this.$eventBus.$emit('onPush', {
+            type: 'toast'
+            message: 'yes! it is event bus',
+          })
+        }
+      }
+    }
+    </script>
+    ```
 
 
 :arrow_up: [목차](#목차)
