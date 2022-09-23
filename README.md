@@ -26,6 +26,7 @@
 14. [Vue 템플릿](#14-Vue-템플릿)
 15. [컴포넌트(SFC)](#15-컴포넌트(SFC))
 16. [이벤트 버스](#16-이벤트-버스)
+17. [상태 관리자(Vuex)](#17-상태-관리자(Vuex))
 
 ---
 
@@ -1731,7 +1732,9 @@
     }
   }
   </script>
+  ```
 
+  ```vue
   <script>
   // componentB.vue
   export default {
@@ -1750,30 +1753,117 @@
   * 하지만 위의 <code>this.$eventBus</code>를 통해 컴포넌트간 이벤트를 전달 할 수 있는 것을 볼 수 있습니다.
   * 이벤트 버스는 위와 같이 간편하게 이벤트를 발생하여 컴포넌트간 손쉬운 통신을 할 수 있습니다.
 
-* 16.2. 손쉽게 컴포넌트간 이벤트 핸들링을 할 수 있지만, 사용하지 않습니다.
+* 16.2. 사용하지 않습니다.
   * 왜? 이벤트 버스에는 치명적인 단점이 있습니다. 코드 관리 포인트가 광범위 해진다는 것입니다.
   * 손쉽게 사용할 수 있다 하여, 여기저기 남발하게 되면 어디에서 보내고 받는 것인지 찾기 힘들어질 수 있습니다.
   * 우리는 그것을 관리 하기 위하여 또 다른 문서를 작성해야 하고, 오류가 발생 하였을때 찾는 것도 쉽지 않을 것입니다.
   * 그리고, 이것은 대체 가능한 기능이 이미 vue에 있습니다. 바로 상태 관리자(Vuex) 입니다.
-  ```javascript
-  // store.js
-  export default {
-    state: {
-      onPush: false,
-      onPushData: {
-        type: '',
-        message: '',
+    ```javascript
+    // store.js
+    export default new Vuex.Store({
+      state: {
+        onPush: false,
+        onPushMsg: [],
+      },
+      getters: {
+        getOnPush(state) {
+          return state.onPush
+        },
+        getPushMessage(state) {
+          return state.onPushMsg
+        }
+      },
+      mutations: {
+        onPushToggle(state, bool) {
+          state.onPush = bool
+        },
+        pushMessage(state, payload) {
+          const { onPush, type, message } = payload
+
+          state.onPush = onPush
+
+          if (onPush) {
+            state.onPushMsg.push({ type, message })
+          }
+        }
+      },
+      actions: {
+        setPushMessage({ commit }, payload) {
+          payload.onPush = true
+          commit('pushMessage', payload)
+
+          setTimeout(() => {
+            commit('onPushToggle', false)
+          }, 3000)
+        }
+      },
+    })
+  ```
+  * component A: 버튼을 클릭하면 입력폼에의 내용이 store에 저장됩니다.
+    ```vue
+    <template>
+      <div>
+        <p>
+          <input type="text" v-model="text" />
+        </p>
+        <button type="button" @click="click">버튼을 클릭하세요.</button>
+      </div>
+    </template>
+
+    <script>
+    import { mapActions } from 'vuex'
+
+    export default {
+      name: 'pushButton',
+      data() {
+        return {
+          text: '',
+        }
+      },
+      methods: {
+        ...mapActions(['setPushMessage']),
+        click() {
+          this.setPushMessage({
+            type: 'toast',
+            message: this.text
+          })
+        }
       }
     }
-  }
-  ```
+    </script>
+    ```
 
-  ```vue
-  <script>
-  import { mapGetters }
-  </script>
-  ```
+  * component B: component A 에서 작성된 message가 변경되면 메시지를 표시 해줍니다.
+    ```vue
+    <template>
+      <div>
+        <p>이곳에 메시지가 나타 납니다.</p>
 
+        <p v-for="item in getPushMessage">
+          {{ item.type }}: {{ item.message }}
+        </p>
+      </div>
+    </template>
+
+    <script>
+    import { mapGetters } from 'vuex'
+
+    export default {
+      name: 'message',
+      computed: {
+        ...mapGetters(['getOnPush', 'getPushMessage'])
+      },
+    }
+    </script>
+    ```
+    > 위와 같이 코드는 이벤트 버스를 사용할 때 보다 많아지지만, 데이터의 흐름이 눈에 보이기 때문에 유지보수에 어려움이 없습니다.
+
+
+:arrow_up: [목차](#목차)
+
+---
+
+## 17. 상태 관리자(Vuex)
 
 :arrow_up: [목차](#목차)
 
