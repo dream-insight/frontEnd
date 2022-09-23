@@ -1713,39 +1713,66 @@
 
 ## 16. 이벤트 버스
 
-* 16.1. 이벤트 버스(Event Bus)는 사용하지 않습니다.
-  * 이벤트 버스란?
-    ```javascript
-    // main.js
-    Vue.prototype.eventBus = new Vue()
-    ```
+* 16.1. 이벤트 버스(Event Bus)란?
+  ```javascript
+  // main.js
+  Vue.prototype.eventBus = new Vue()
+  ```
 
-    ```vue
-    <script>
-    // componentA.vue
-    export default {
-      mounted() {
-        this.$eventBus.$on('onPush', (options) => {
-          // something to do
+  ```vue
+  <script>
+  // componentA.vue
+  export default {
+    mounted() {
+      // $emit('onPush') 대응
+      this.$eventBus.$on('onPush', (options) => {
+        // something to do
+      })
+    }
+  }
+  </script>
+
+  <script>
+  // componentB.vue
+  export default {
+    methods: {
+      pushMessage() {
+        this.$eventBus.$emit('onPush', {
+          type: 'toast'
+          message: 'yes! it is event bus',
         })
       }
     }
-    </script>
+  }
+  </script>
+  ```
+  * 위의 예제를 보면 componentA와 componentB는 서로 어느 위치에 있는지 알수 없는 상태입니다.
+  * 하지만 위의 <code>this.$eventBus</code>를 통해 컴포넌트간 이벤트를 전달 할 수 있는 것을 볼 수 있습니다.
+  * 이벤트 버스는 위와 같이 간편하게 이벤트를 발생하여 컴포넌트간 손쉬운 통신을 할 수 있습니다.
 
-    <script>
-    // componentB.vue
-    export default {
-      methods: {
-        pushMessage() {
-          this.$eventBus.$emit('onPush', {
-            type: 'toast'
-            message: 'yes! it is event bus',
-          })
-        }
+* 16.2. 손쉽게 컴포넌트간 이벤트 핸들링을 할 수 있지만, 사용하지 않습니다.
+  * 왜? 이벤트 버스에는 치명적인 단점이 있습니다. 코드 관리 포인트가 광범위 해진다는 것입니다.
+  * 손쉽게 사용할 수 있다 하여, 여기저기 남발하게 되면 어디에서 보내고 받는 것인지 찾기 힘들어질 수 있습니다.
+  * 우리는 그것을 관리 하기 위하여 또 다른 문서를 작성해야 하고, 오류가 발생 하였을때 찾는 것도 쉽지 않을 것입니다.
+  * 그리고, 이것은 대체 가능한 기능이 이미 vue에 있습니다. 바로 상태 관리자(Vuex) 입니다.
+  ```javascript
+  // store.js
+  export default {
+    state: {
+      onPush: false,
+      onPushData: {
+        type: '',
+        message: '',
       }
     }
-    </script>
-    ```
+  }
+  ```
+
+  ```vue
+  <script>
+  import { mapGetters }
+  </script>
+  ```
 
 
 :arrow_up: [목차](#목차)
