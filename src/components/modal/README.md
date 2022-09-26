@@ -5,10 +5,13 @@
 // main.js
 import modal from '@/components/modal'
 
-Vue.use(modal, {
+// opational config
+const options = {
   modalStyleClass: '.modal-bg',
   noScrollStyleClass: '.no-scroll'
-})
+}
+
+Vue.use(modal, options)
 ```
 
 ```Vue
@@ -89,3 +92,7 @@ button + button {
 | btnCancelText | String | <code>취소</code> | false | 취소 버튼에 표시할 문자열 |
 | modalStyleClass | String | <code>.modal-bg</code> | false | 화면 전체를 가리는 레이아웃의 style class, <br> 꼭 .class-name 으로 입력해야 합니다.|
 | noScrollStyleClass | String | <code>.no-scroll</code> | false | modal이 화면을 덮었을때 body 테그에 삽입될 스크롤 삭제 style class |
+
+---
+
+::arrow_back:: [컴포넌트 목록으로이동](https://github.com/dream-insight/frontEnd/tree/main/src)

@@ -6,6 +6,7 @@
 * [Vue 2.x](https://v2.vuejs.org/)
 * [SCSS](https://sass-lang.com/)
 * [작성 참조 - AirBnB](https://github.com/tipjs/javascript-style-guide)
+* [Vue2.x 컴포넌트 모음](https://github.com/dream-insight/frontEnd/tree/main/src)
 ---
 
 ## 목차
