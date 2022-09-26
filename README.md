@@ -140,10 +140,10 @@ export default {
     confirmLayer() {
       // it's okay
       modal.confirm({
-          message: 'test',
-          okay: () => {
+        message: 'test',
+        okay: () => {
           ...
-          }
+        }
       })
     }
   }
@@ -304,8 +304,8 @@ export default {
 }
 </script>
 ```
-  > 우리는 코드를 작성하면서 간혹 비슷한 형태의 여러코드를 수정해야 하는 때도 있다는 것을 알고 있습니다.<br>
-  그러한 경험이 있는 개발자는 위와 같은 코드 나열 방식이 왜 안 좋은지 익히 알고 있고습니다.
+  > 코드를 작성하면서 간혹 비슷한 형태의 여러코드를 수정해야 하는 때도 있습니다.<br>
+  그러한 그러한 상황에 위와 같은 코드 나열 방식은 우리를 매우 불편하게 합니다.
 
 :arrow_up: [목차](#목차)
 
@@ -396,7 +396,7 @@ const getCodeString = function(key) {
   return code[key]
 }
 ```
-> 우리가 변수를 사용하기 전에 먼저 선언해주는 것과 같습니다. 함수 선언 방식은 변수를 선언하는 것과 동일하게 생각하면 됩니다.
+> 우리가 변수를 사용하기 전에 먼저 선언해주는 것과 같습니다. 함수 선언 방식은 변수를 선언하는 것과 동일하게 여겨집니다.
 
 ### 4.3. 함수를 명확히 구분하여 사용하세요. (void, return)
 * 대부분의 언어에서는 함수에 대해 명확히 정의 하기를 요구합니다.
@@ -774,6 +774,8 @@ if (banana == '') {
 // Good
 if (apple === banana) {
   ...
+} else if (apple !== '') {
+  ...
 }
 ```
 * 숫자형을 비교 하기 위해서는 해당 값을 필히 Type Casting(Number, parseInt, parseFloat) 후 비교 해주세요.
@@ -990,7 +992,7 @@ for (const [key, val] of Object.entries(obj)) {
   values.push(val)
 }
 
-// Same Bad
+// Bad
 for (const key of Object.keys(obj)) {
   values.push(obj[key])
 }
@@ -1000,7 +1002,7 @@ Object.entries(obj).map(([key, val]) => {
   values.push(key)
 })
 
-// Same Good
+// Good
 Object.keys(obj).map(key => {
   values.push(obj[key])
 })
@@ -1092,7 +1094,7 @@ function makeDOM(data = {}) {
 
     Object.entries(data).forEach(([, item]) => {
       if (item.sub !== undefined) {
-        let tag = `<div><span>${item.text}</span> ${this.makeMenu(item.sub).join('')}</div>`
+        let tag = `<div><span>${item.text}</span> ${makeMenu(item.sub).join('')}</div>`
         doms.push(tag)
       } else {
         doms.push(`<div><span>${item.text}</span></div>`)
@@ -1501,7 +1503,7 @@ export default {
   </div>
 </template>
 ```
-> 디렉티브 나열 순서: none bind -> v-bind(:) -> v-on(@) -> v-html -> v-model -> v-for -> v-if
+> 디렉티브 나열 순서: 일반 bind -> 변수(숫자) bind(:) -> 이벤트(@) -> v-html -> v-model -> v-for -> v-if
 
 ### 14.7. 같은 속성을 중복하여 사용하지 마세요.
 ```vue
@@ -1869,7 +1871,7 @@ export default {
 
 ## 17. 상태 관리자 Vuex
 ### 17.1. 기능별 모듈 분리를 기본으로 합니다.
-  * 분류가 모호한 코드는
+  * 분류가 모호한 코드는 것들은 store/index.js에 나열하고 코멘트 처리 해줍니다.
 ```javascript
 import session from '@/store/modules/session.js'
 import board from '@/store/modules/board.js'
@@ -1878,7 +1880,11 @@ const store = new Vuex.Store({
   modules: {
     session,
     board,
-  }
+  },
+  state: { ... },
+  mutations: { ... },
+  actions: { ... },
+  getters: { ... }
 })
 ```
 
@@ -1968,3 +1974,5 @@ const routes = [
 :arrow_up: [목차](#목차)
 
 ---
+
+* 초안 작성 2022.09.26일 완료 (작성자: 김종윤 수석 매니저)
