@@ -27,6 +27,7 @@
 15. [컴포넌트(SFC)](#15-컴포넌트(SFC))
 16. [이벤트 버스](#16-이벤트-버스)
 17. [상태 관리자(Vuex)](#17-상태-관리자(Vuex))
+18. [라우터(Router)](#18-라우터(Router))
 
 ---
 
@@ -64,8 +65,8 @@ export default {
     }
   },
   data: () => ({
+    // 직접적으로 this를 쓸 필요가 없는 경우 단축하여 사용합니다.
     ...
-    description: '직접적으로 this를 쓸 필요가 없는 경우'
   }),
   watch: {
     apple(v, preV) {
@@ -1294,7 +1295,8 @@ export default {
 </script>
 ```
 
-### 13.2. 제어문 전체에 대한 코멘트는 제어문 최상단에 표기하고, 제어 구분마다 표기 시에는 안쪽에 서술해주세요.
+### 13.2. 제어문
+* 제어문에 대한 코멘트 작성시, 최상단에 표기하고, 제어 구분마다 표기 시에는 안쪽에 서술해주세요.
 ```vue
 <script>
 export default {
@@ -1359,7 +1361,8 @@ export default {
 ---
 
 ## 14. Vue 템플릿 문법
-### 14.1. 테그는 길게 늘어 놓지 않습니다. 계층 구조에 맞도록 개행과 들여쓰기로 구분해주세요.
+### 14.1. 테그는 길게 늘어 놓지 않습니다.
+* 계층 구조에 맞도록 개행과 들여쓰기로 구분해주세요.
 ```vue
 <template>
   <div>
@@ -1554,7 +1557,8 @@ export default {
 
 ## 15. 컴포넌트(SFC)
 
-### 15.1. 컴포넌트 import 시에는 카멜캐이스로, template 배치시에 케밥캐이스로 구분 합니다.
+### 15.1. 컴포넌트 명명
+* 컴포넌트 import 시에는 카멜캐이스로, template 배치시에 케밥캐이스로 구분 합니다.
 ```vue
 <template>
   <div>
@@ -1578,79 +1582,67 @@ import checkButton from '@/components/checkButton'
 ```
 
 ### 15.2. Props 정의
-* 모든 Props에 대해 자료형을 정의하고, 그외 필요한 옵션을 정의 하세요. 자료형외에 필요한 부분이 없다면 자료형 정의만 하여도 무관합니다.
-  ``` vue
-  <script>
-  // componentA
-  export default {
-    // Bad
-    props: ['value', 'maxLength', 'title', 'isHide'],
+* 모든 Props에 대해 자료형을 정의하고, 그외 필요한 옵션을 정의 하세요.
+* 자료형외에 필요한 부분이 없다면 자료형 정의만 하여도 무관합니다.
+``` vue
+<script>
+// componentA
+export default {
+  // Bad
+  props: ['value', 'maxLength', 'title', 'isHide'],
 
-    // Good
-    props: {
-      value: {
-        type: [Number, String],
-        required: true,
-      },
-      maxLength: Number,
-      title: {
-        type: String,
-        default: '기본 Text',
-      },
-      isHide: {
-        type: Boolean,
-        default: false,
-      },
-      items: {
-        type: Array,
-        required: true,
-      }
+  // Good
+  props: {
+    value: {
+      type: [Number, String],
+      required: true,
+    },
+    maxLength: Number,
+    title: {
+      type: String,
+      default: '기본 Text',
+    },
+    isHide: {
+      type: Boolean,
+      default: false,
+    },
+    items: {
+      type: Array,
+      required: true,
     }
   }
-  </script>
-  ```
+}
+</script>
+```
   > 좀 더 자세항 내용은 링크를 참조 하세요. [Props 유효성 검사](https://v3.ko.vuejs.org/guide/component-props.html#prop-%E1%84%8B%E1%85%B2%E1%84%92%E1%85%AD%E1%84%89%E1%85%A5%E1%86%BC-%E1%84%80%E1%85%A5%E1%86%B7%E1%84%89%E1%85%A1)
 
-* template 배치시 props명은 케밥캐이스로 정의 하고, 각 props 형태별 바인딩 방식을 확인하세요.
-  ```vue
-  <template>
-    <div>
-      <!-- Bad -->
-      <component-a
-        maxLength="10"
-        :is-hide="true"
-        :title="'사과 좋아요!'"
-        :items="list"
-        v-model="apple"
-      />
+* template 배치시 props명은 케밥캐이스로 정의 하고, 각 props 자료형에 맞춰 설정하세요.
+```vue
+<template>
+  <div>
+    <!-- Bad -->
+    <component-a
+      maxLength="10"
+      :is-hide="true"
+      :title="'사과 좋아요!'"
+      :items="list"
+      v-model="apple"
+    />
 
-      <!-- Good -->
-      <component-a
-        is-hide
-        title="사과 좋아요!"
-        :max-length="10"
-        :items="list"
-        v-model="apple"
-      />
-    </div>
-  </template>
+    <!-- Good -->
+    <component-a
+      is-hide
+      title="사과 좋아요!"
+      :max-length="10"
+      :items="list"
+      v-model="apple"
+    />
+  </div>
+</template>
+```
 
-  <script>
-  import componentA from './componentA'
-
-  export default {
-    components: { componentA },
-    data() {
-      return {
-        apple: '',
-        list: ['a', 'b', 'c', 'd', 'e', 'f']
-      }
-    }
-  }
-  </script>
-  ```
-
-### 15.3. Props의 데이터는 단방향입니다. 컴포넌트간 데이터를 주고 받아야 한다면, v-model로 연결 하세요.
+### 15.3. v-model
+*  Props의 데이터는 단방향입니다. 컴포넌트간 데이터를 주고 받아야 한다면, v-model로 연결 하세요.
 ```vue
 <template>
   <div>
@@ -1716,7 +1708,8 @@ export default {
 }
 </script>
 ```
-> ref 연결로, 컴포넌트의 <code>data</code>를 직접 참조하는 방식은 비효율적이고, vue framework의 흐름에도 반합니다.
+> ref 설정으로 컴포넌트의 <code>data</code>를 직접 참조하는 방식은 비효율적입니다. <br>
+플러그인 작성 외에는 절대 data를 직접 참조 또는 변이 하지 않도록 합니다.
 
 
 :arrow_up: [목차](#목차)
@@ -1868,7 +1861,7 @@ export default {
   }
   </script>
   ```
-  > 위와 같이 코드는 이벤트 버스를 사용할 때 보다 많아지지만, 데이터의 흐름이 눈에 보이기 때문에 유지보수에 어려움이 없습니다.
+  > 위와 같이 코드는 이벤트 버스를 사용할 때 보다 많아지지만, 흐름이 눈에 보이기 때문에 유지보수에 용의 합니다.
 
 
 :arrow_up: [목차](#목차)
@@ -1876,7 +1869,102 @@ export default {
 ---
 
 ## 17. 상태 관리자(Vuex)
-### 17.1. [16.2] 항목에서 보았듯이, 상태 관리자를 통해 컴포넌트와 컴포넌트 사이의 상태 또는 데이터 관리가 가능합니다.
+### 17.1. 기능별 모듈 분리를 기본으로 합니다.
+  * 분류가 모호한 코드는
+```javascript
+import session from '@/store/modules/session.js'
+import board from '@/store/modules/board.js'
+
+const store = new Vuex.Store({
+  modules: {
+    session,
+    board,
+  }
+})
+```
+
+### 17.2. mutations, actions, getters
+  * 기본 명명 규칙을 준수하여 작성해주세요.
+  * mutations -> mut, actions -> set, getters -> is, get 으로 명명합니다.
+```javascript
+const session = {
+  namespaced: true,
+  state: {
+    user: {
+      token: '',
+      id: '',
+      name: '',
+    },
+    loginTime: '',
+  },
+  mutations: {
+    mutSession(state, payload) {
+      // do something
+    },
+    mutLogout(state, payload) {
+      // do somthing
+    }
+  },
+  actions: {
+    setLogin({ commit }, payload) {
+      const { token, id, name } = payload
+      commit('mutSession', { token, id, name })
+      // do something
+    },
+    setLogout({ commit }, payload) {
+      // do somthing
+    }
+  },
+  getters: {
+    isLogin(state) {
+      if (state.user.token) {
+        return true
+      }
+
+      return false
+    },
+    getUserName(state) {
+      return state.user.name
+    }
+  }
+}
+```
+
+:arrow_up: [목차](#목차)
+
+---
+
+## 18. 라우터(Router)
+* 이름은 경로와 일치 시키되 앞쪽 <code>/</code>는 사용하지 않습니다.
+* 별도의 import로 파일을 불러 오지 않고 <code>component</code> 옵션에 바로 <code>() => import()</code> 방식으로 매칭 시켜 줍니다.
+* meta 옵션은 필요한 부분에만 작성하여 주고, 그외에는 설정하지 않습니다.
+```javascript
+// Bad
+import petList from '@/views/pet/list'
+
+const routes = [
+  { path: '/', name: 'index', component: () => import('@/views/index') },
+
+  // Bad
+  { path: '/pet/list', name: 'pet/list', component: petList },
+
+  // Good
+  {
+    path: '/board/list', name: 'board/list', component: () => import('...'), children: [
+      { path: '/board/detail', name: 'board/detail', component: () => import('...') },
+      { path: '/board/comment', name: 'board/comment', component: () => import('...') },
+    ]
+  },
+  { path:  '/board/write', name: 'board/write', component: () => import('...') },
+
+  {
+    path:  '/member/detail', name: 'member/detail', component: () => import('...'), meta: { pullScreen: true }, children: [
+      { path: '/member/detail/password', name: 'member/detail/password', component: () => import('...') },
+    ]
+  },
+]
+```
+
 
 :arrow_up: [목차](#목차)
 
