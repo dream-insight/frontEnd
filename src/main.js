@@ -22,15 +22,32 @@ Vue.use(spinner, {
 // fontawesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faExclamationTriangle, faInfoCircle, faBan, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+import {
+  faExclamationTriangle, faInfoCircle, faBan, faCheckCircle,
+  faAngleDoubleLeft, faAngleLeft, faAngleRight, faAngleDoubleRight,
+  faQuestionCircle,
+} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faCheckCircle, faInfoCircle, faExclamationTriangle, faBan)
+library.add(
+  faCheckCircle, faInfoCircle, faExclamationTriangle, faBan,
+  faAngleDoubleLeft, faAngleLeft, faAngleRight, faAngleDoubleRight,
+  faQuestionCircle
+)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 import toast from '@/components/toast'
 
 Vue.use(toast)
+
+
+import pagination from '@/components/pagination'
+
+Vue.component('pagination', pagination)
+
+import tooltip from '@/components/tooltip'
+
+Vue.component('tooltip', tooltip)
 
 
 new Vue({

@@ -3,7 +3,7 @@
 # 1. 사용방법
 ```javascript
 // main.js
-import modal from '@/components/modal'
+import toast from '@/components/toast'
 
 // opational config
 const options = {
@@ -11,7 +11,7 @@ const options = {
   delay: 5
 }
 
-Vue.use(modal, options)
+Vue.use(toast, options)
 ```
 
 ```vue

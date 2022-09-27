@@ -8,6 +8,8 @@ const routes = [
   { path: '/modal', name: 'modal', component: () => import('@/views/modal') },
   { path: '/spinner', name: 'spinner', component: () => import('@/views/spinner') },
   { path: '/toast', name: 'toast', component: () => import('@/views/toast') },
+  { path: '/pagination', name: 'pagination', component: () => import('@/views/pagination') },
+  { path: '/tooltip', name: 'paginationtooltip', component: () => import('@/views/tooltip') },
 ]
 
 const router = new VueRouter({
