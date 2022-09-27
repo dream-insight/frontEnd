@@ -1,63 +1,71 @@
-import toastComponent from './toastComponent'
+import toastComponent from './component'
 
 export default {
-    install(Vue) {
-        let component = Vue.extend(toastComponent)
-        let mw = null
+  install(Vue, options = null) {
+    const component = Vue.extend(toastComponent)
+    let toast = null
 
-        window.toast = params => {
-            this.setMessage(params, 'toast')
+    const setMessage = (opt) => {
+      if (toast == null) {
+        toast = new component({ el: document.createElement('div') })
+        document.body.appendChild(toast.$el)
+      }
+
+      if (options !== null) {
+        if (options.maxShowMessage !== undefined) {
+          toast.maxShowMessage = options.maxShowMessage
         }
 
-        window.toast.hide = () => {
-            mw.hide()
+        if (options.delay !== undefined) {
+          toast.delay = options.delay
+        }
+      }
+
+      if (typeof opt == 'object') {
+        if (opt.message !== undefined) {
+          toast.message = opt.message
+        } else {
+          console.error('toast message is not set')
+          return
         }
 
-        this.setMessage = (opt) => {
-            let message = '', icon = 'check-circle', delay = 3000, color = 'success', messageLimit = 3
-
-            if (mw == null) {
-                mw = new component({el: document.createElement('div')})
-                document.body.appendChild(mw.$el)
-            }
-
-            if (typeof opt == 'object') {
-                if (opt.delay != null && opt.delay != undefined) {
-                    delay = opt.delay
-                }
-
-                if (opt.color != null && opt.color != undefined) {
-                    color = opt.color
-                }
-
-                if (opt.messageCount > 0) {
-                    messageLimit = opt.messageLimit
-                }
-
-                switch (color) {
-                    case 'warning':
-                        icon = 'exclamation-circle'
-                        break
-                    case 'info':
-                        icon = 'info-circle'
-                        break
-                    case 'error':
-                        icon = 'times'
-                        break
-                }
-
-                message = opt.message
-            } else {
-                message = opt
-            }
-
-            mw.icon = icon
-            mw.message = message
-            mw.delay = delay
-            mw.color = color
-            mw.messageLimit = messageLimit
-
-            mw.show()
+        if (opt.color != undefined) {
+          toast.color = opt.color
         }
+
+        switch (opt.color) {
+          case 'warning':
+            toast.icon = 'exclamation-triangle'
+            break
+          case 'info':
+            toast.icon = 'info-circle'
+            break
+          case 'error':
+            toast.icon = 'ban'
+            break
+        }
+      } else {
+        if (opt !== undefined) {
+          toast.icon = 'check-circle'
+          toast.color = 'success'
+          toast.message = opt
+        } else {
+          console.error('toast message is not set')
+        }
+      }
+
+      toast.show()
     }
+
+    const objectToast = (params) => {
+      setMessage(params, 'toast')
+    }
+
+    objectToast.hide = () => {
+      toast.hide()
+    }
+
+    // window.toast = objectToast
+    Vue.prototype.$toast = objectToast
+  }
 }

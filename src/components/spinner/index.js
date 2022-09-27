@@ -1,66 +1,83 @@
-import progressComponent from './progressComponent'
+import spinnerCompnent from './component'
 
 export default {
-    install(Vue) {
-        let component = Vue.extend(progressComponent);
-        let progress = null
-        let timeout = null
-        let delay = 0
-        let count = 0       // progress 수량
+  install(Vue, options = null) {
+    let component = Vue.extend(spinnerCompnent)
+    let spinner = null
 
-        window.progress = () => {}
+    const objectSpinner = {
+      init() {
+        if (spinner === null) {
+          spinner = new component({ el: document.createElement('div') })
+          document.body.appendChild(spinner.$el)
 
-        window.progress.init = () => {
-            if (progress === null) {
-                progress = new component({el: document.createElement('div')})
-                document.body.appendChild(progress.$el)
+          if (options !== null) {
+            if (options.limitTime !== undefined) {
+              spinner.limitTime = options.limitTime
             }
 
-            progress.$on('@destroy', () => {
-                setTimeout(() => {
-                    if (progress !== null) {
-                        progress.$el.remove()
-                        progress = null
-                    }
-                }, 300)
-            })
-        }
-
-        window.progress.show = (msg = 'Progressing...', limit = 10000) => {
-            count++
-
-            // 프로그래스 표시 지연 시간을 1초로 한다
-            if (timeout === null) {
-                timeout = setTimeout(() => {
-                    window.progress.init()
-                    progress.limitTime = limit
-                    progress.show(msg)
-                }, delay)
+            if (options.delay !== undefined) {
+              spinner.delay = options.delay
             }
-        }
+          }
 
-        window.progress.delay = function(sec) {
-            if (sec > 0) {
-                delay = sec * 1000
+          spinner.$on('destroy', () => {
+            if (spinner !== null) {
+              spinner.$el.remove()
+              spinner = null
             }
+          })
+        }
+      },
 
-            return this
+      /**
+       * spinner 최대 표시 시간을 설정
+       *
+       * @param { Number } limit 최대 표시 시간 기본 10초
+       * @returns
+       */
+      timeout(limit) {
+        this.init()
+
+        if (limit) {
+          spinner.limitTime = limit
         }
 
-        window.progress.hide = (flag) => {
-            count--
+        return this
+      },
 
-            if (count <= 0) {
-                delay = 0
-                count = 0
+      /**
+       * Spinner를 표시 하기 위한 메서드
+       *
+       * @param { String } msg 박스 하단 부분에 표시될 text
+       */
+      async show(msg = '') {
+        this.init()
+        await spinner.show(msg)
+      },
 
-                clearTimeout(timeout)
-                timeout = null
+      /**
+       * 채이닝 이후 메서드 실행을 지연시키기 위한 메서드
+       *
+       * @param { Number } sec 지연 시간 (초)
+       * @returns { Object } 메서드 채이닝을 위한 this 반환
+       */
+      delay(sec) {
+        this.init()
+        spinner.delay = sec
 
-                if (progress !== null) {
-                    progress.hide(flag)
-                }
-            }
-        }
+        return this
+      },
+
+      /**
+       * 스피너를 닫아 줍니다.
+       */
+      hide() {
+        this.init()
+        spinner.hide()
+      }
     }
+
+    window.spinner = objectSpinner
+  }
 }

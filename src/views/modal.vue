@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'components',
+  name: 'modalPreview',
   data() {
     return {
       message: 'test'

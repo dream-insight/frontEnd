@@ -14,7 +14,7 @@ const options = {
 Vue.use(modal, options)
 ```
 
-```Vue
+```javascript
 <template>
   <div>
     <p>{{ message }}</p>
@@ -95,4 +95,4 @@ button + button {
 
 ---
 
-::arrow_back:: [컴포넌트 목록으로이동](https://github.com/dream-insight/frontEnd/tree/main/src)
+:arrow_left: [컴포넌트 목록으로이동](https://github.com/dream-insight/frontEnd/tree/main/src)

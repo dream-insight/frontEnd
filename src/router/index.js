@@ -5,7 +5,9 @@ Vue.use(VueRouter)
 
 const routes = [
   { path: '/', name: 'home' },
-  { path: '/components', name: 'components', component: () => import('@/views/components') }
+  { path: '/modal', name: 'modal', component: () => import('@/views/modal') },
+  { path: '/spinner', name: 'spinner', component: () => import('@/views/spinner') },
+  { path: '/toast', name: 'toast', component: () => import('@/views/toast') },
 ]
 
 const router = new VueRouter({
