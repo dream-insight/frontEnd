@@ -1,17 +1,12 @@
 <template>
   <div
-    :class="[
-      'input_wrap ml-1',
-      { error: !isValidate },
-      { success: successful },
-      { block: block }
-    ]"
+    :class="['input-wrap', { error: !isValidate, success: successful, block }]"
     :style="{ width: styleWidth }"
     @focus="focus">
     <textarea
       ref="textarea"
-      :class="['block', 'form-control form-control-sm', { block: block }]"
-      :style="[{ height: height ? height + 'px' : false }]"
+      :class="['block', { block: block }]"
+      :style="[{ height: height ? `${height}px` : '' }]"
       :rows="rows"
       :placeholder="placeholder"
       :value="value"
@@ -24,15 +19,10 @@
 
     <input
       autocomplete
-      :name="name"
       ref="input"
-      :class="[
-        'text block form-control form-control-sm',
-        { block: block },
-        { 'text-right': textRight }
-      ]"
-      :style="[{ width: width ? width + 'px' : false }]"
-      :type="type"
+      type="text"
+      :class="['block', { block: block }, { 'text-right': textRight }]"
+      :style="[{ width: width ? `${width}px` : '' }]"
       :placeholder="placeholder"
       :value="value"
       :tabindex="tabIndex ? tabIndex : false"
@@ -45,9 +35,9 @@
     <p
       :class="['description', { error: errorTransition }]"
       v-if="message !== '' || successful">
-      <i class="fas fa-exclamation-circle" v-if="!isValidate" />
+      <font-awesome-icon icon="fas fa-exclamation-circle" v-if="!isValidate" />
       {{ message }}
-      <i class="fas fa-check-circle" v-if="successful" />
+      <font-awesome-icon icon="fas fa-check-circle" v-if="successful" />
     </p>
   </div>
 </template>
@@ -56,28 +46,28 @@
 export default {
   name: 'inputField',
   props: {
-    value: [String, Number], // model
-    name: String,
-    type: {
-      // 입력 폼 형식 String:''
-      type: String,
-      default: 'text'
-    },
-    placeholder: String, // String:''
-    rows: {
-      // multiline 이 true인 경우 몇 줄 까지 보일지 설정 Number: 5
-      type: [Number, String],
-      default: 5
-    },
-    height: [String, Number], // textarea 높이
-    width: [String, Number], // 넓이
+    value: [String, Number],
+    placeholder: String,
+    // display block !!! width가 선언 된 경우 width가 우선
     block: {
-      // display block !!! width가 선언 된 경우 width가 우선
       type: Boolean,
       default: false
     },
+    multiline: {
+      // textarea 여부,
+      type: Boolean,
+      default: false
+    },
+    // multiline 이 true인 경우 몇 줄 까지 보일지 설정 Number: 5
+    rows: {
+      type: Number,
+      default: 5
+    },
+     // textarea 일때 적용됨
+    height: [String, Number],
+    width: [String, Number],
+    // 폼 유효성 검사 함수 배열
     validate: {
-      // 폼 검증 배열일 경우 함수에 의거, true일 경우 pattern 호출(password, email만) Array:[condition:function || message:text] or true
       type: Array,
       default: () => []
     },
@@ -85,36 +75,43 @@ export default {
       type: Boolean,
       default: true
     },
-    success: {
-      // 폼 검증이 완료된 경우 check icon 표시 여부 Boolean: false
-      type: Boolean,
-      default: false
-    },
-    pattern: {
-      // 체크할 패턴을 지정 String:''
-      type: String,
-      default: ''
-    },
-    maxLength: [String, Number], // maxlength String:''
+    // 폼 검증이 완료된 경우 check icon 표시 여부 Boolean: false
+    // success: {
+    //   type: Boolean,
+    //   default: false
+    // },
+    maxLength: [String, Number],
+    // 강제 에러 출력 - check함수를 수행 하지 않음
     errorMessage: {
-      // 강제 에러 출력 - check함수를 수행 하지 않음 String:''
       type: String,
       default: ''
     },
-    multiline: {
-      // textarea 여부,
+    disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    disabled: Boolean, // disabled : false
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    // 자동 포커스
     autofocus: {
       type: Boolean,
       default: false
-    }, // 자동 포커스
-    textRight: String, // text 정렬 오른 쪽으로
-    tabIndex: [String, Number], // tabindex
-    maxLength: [String, Number], // 최대 입력 가능한 글자 수 (type=text 에만 적용)
-    readonly: Boolean // readonly Boolean: false,
+    },
+    textRight: {
+      type: Boolean,
+      default: false,
+    },
+    // tabindex
+    tabIndex: [String, Number],
+    // 최대 입력 가능한 글자 수 (type=text 에만 적용)
+    maxLength: [String, Number],
+    // 체크할 패턴을 지정 String:''
+    pattern: {
+      type: String,
+      default: ''
+    },
   },
   data() {
     return {
@@ -127,7 +124,7 @@ export default {
   watch: {
     errorMessage(v) {
       // 임의로 지정된 에러가 있는 경우 에러 아이콘 표기
-      if (v != '') {
+      if (v) {
         this.message = v
         this.isValidate = false
         this.checkPass = false
@@ -146,9 +143,9 @@ export default {
         }, 300)
       }
     },
-    value(after, before) {
+    value(after) {
       // 외부에서 model이 업데이트 되도 유효성 검사
-      if (after != '') {
+      if (after) {
         this.message = ''
         this.isValidate = true
         this.errorTransition = false
@@ -221,50 +218,52 @@ export default {
         type = this.pattern
       }
 
-      let obj = {
+      const obj = {
         pattern: '',
         message: ''
       }
 
-      if (type == 'eng') {
+      switch (type) {
+        case 'eng':
         // 영문만 유효성 검사
         obj.pattern = /^[a-z|A-Z]+$/
         obj.message = '영문만 입력 가능합니다.'
-
-      } else if (type == 'engnum') {
+        break
+      case 'engnum':
         // 영문,숫자 유효성 검사
         obj.pattern = /^[(a-z|A-Z)0-9]+$/
         obj.message = '영문, 숫자만 입력 가능합니다.'
-
-      } else if (type == 'id')  {
+        break
+      case 'id':
         // 아이디 영문,숫자,underbar(_) 사용 유효성 검사
         obj.pattern = /^[(a-z|A-Z)0-9]+[_]*[(a-z|A-Z)0-9]+$/
         obj.message = '영문, 숫자 입력만 가능합니다.( _ 중간 사용 가능)'
-
-      } else if (type == 'num') {
+        break
+      case 'num':
         // 정수 유효성 검사
         obj.pattern = /^[0-9]+$/
         obj.message = '숫자만 입력 가능합니다.'
-      } else if (type == 'wordnum') {
+        break
+      case 'wordnum':
         // 영문,숫자 혼합사용 유효성 검사
         obj.pattern = /^([0-9]+[a-z|A-Z]+)|([a-z|A-Z]+[0-9]+)$/
         obj.message = '영문, 숫자 혼합하여 입력해주세요.'
-
-      } else if (type == 'password') {
+        break
+      case 'password':
         obj.pattern = /^(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9])|(?=.*[a-zA-Z])(?=.*[0-9])|(?=.*[^a-zA-Z0-9])(?=.*[0-9]).{8,16}$/
         obj.message = '영문, 숫자, 특수문자 중 2가지 이상을 조합하여 입력해주세요.(8~16자)'
-
-      } else if (type == 'doamin') {
+        break
+      case 'doamin':
         // 도메인
         obj.pattern = /^([a-zA-Z0-9]{1,}\.?)[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z0-9]{2,})+(?:\:[0-9]{1,})*$/
         obj.message = '도메인주소 형식이 일치 하지 않습니다.(http://, https:// 제외)'
-
-      } else if (type == 'email') {
+        break
+      case 'email':
         // 이메일 유효성 검사
         obj.pattern = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         obj.message = '이메일 형식과 일치하지 않습니다.'
-
-      } else if (type == 'tel') {
+        break
+      case 'tel':
         // 전화 번호 유효성
         obj.pattern = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/
         obj.message = '전화번호 형식과 일치하지 않습니다.'
@@ -276,7 +275,7 @@ export default {
       // 임의로 지정된 에러가 없는 경우
       if (this.errorMessage === '') {
         // pattern check
-        if (this.pattern != '') {
+        if (this.pattern) {
           const check = this.getPattern()
 
           if (check.pattern.test(this.value)) {
@@ -292,7 +291,7 @@ export default {
         }
 
         // validate check
-        if (this.validate.length > 0) {
+        if (this.validate.length) {
           for (let i = 0; i < this.validate.length; i++) {
             let result = this.validate[i].call(null, this.value)
 
@@ -315,6 +314,7 @@ export default {
         return true
       } else {
         this.errorTransition = true
+        return false
       }
     },
     resetForm() {
@@ -324,14 +324,58 @@ export default {
 }
 </script>
 
-<style scoped>
-.input_wrap {
+<style lang="scss" scoped>
+.input-wrap {
   display: inline-block;
+
+  input, textarea {
+    width: 100%;
+  }
+
+  &.error input,
+  &.error textarea {
+    border: 2px solid #ff5252;
+  }
+
+  &.error .description {
+    color: #ff5252;
+  }
+
+  .description {
+    font-size: 12px !important;
+    font-weight: normal;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    border: 0 !important;
+    color: #ff5252;
+    text-align: left !important;
+
+    &.error {
+      animation: shaking 0.3s;
+    }
+  }
 }
-.input_wrap.block {
+
+.block {
   display: block !important;
 }
-textarea {
-  resize: none;
+
+/* error message shaking */
+@keyframes shaking {
+  0% {
+    transform: translateX(10px);
+  }
+  25% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(10px);
+  }
 }
 </style>

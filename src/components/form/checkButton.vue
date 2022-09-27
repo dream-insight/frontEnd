@@ -1,38 +1,54 @@
 <template>
-  <div :class="['inline', 'ml-1', color, { button }]">
-    <label
-      :class="{ 'box-block': width != '' }"
-      :style="{ width: width != '' ? width + 'px' : '' }"
-      :key="'check-button-' + i"
-      v-for="(v, i) in list">
-      <input
-        type="radio"
-        :id="`${name}${i}`"
-        :value="v.value"
-        @click="setIndex(i)"
-        v-model="val"
-        v-on="eventListeners"
-        v-if="type == 'radio'" />
+  <div :class="['check-button', { button }]">
+    <template v-if="button">
+      <label
+        style="margin-top: 5px;"
+        :key="`keyword${i}`" v-for="(v, i) in list">
+        <input
+          type="checkbox"
+          :name="name"
+          :value="v.value"
+          @click="checkValue($event, v.value, i)"
+          v-model="val"
+        />
+        <span>{{ v.text }}</span>
+      </label>
+    </template>
+    <template v-else>
+      <label
+        :key="'check-button-' + i"
+        v-for="(v, i) in list">
+        <input
+          type="radio"
+          :id="`${name}${i}`"
+          :name="name"
+          :value="v.value"
+          @click="setIndex(i)"
+          v-model="val"
+          v-on="eventListeners"
+          v-if="type == 'radio'"
+        />
 
-      <input
-        type="checkbox"
-        :id="`${name}${i}`"
-        :value="v.value"
-        :checked="val.indexOf(v.value) > -1 ? true : false"
-        @click="checkValue($event, v.value, i)"
-        v-model="val"
-        v-on="eventListeners"
-        v-else />
+        <input
+          type="checkbox"
+          :id="`${name}${i}`"
+          :value="v.value"
+          :name="name"
+          @click="checkValue($event, v.value, i)"
+          v-model="val"
+          v-on="eventListeners"
+          v-else
+        />
 
-      <span>{{ v.text }}</span>
-    </label>
+        {{ v.text }}
+      </label>
+    </template>
 
     <p
       :class="['description', { error: errorTransition }]"
       v-if="message !== '' || successful">
-      <i class="fas fa-exclamation-circle" v-if="!isValidate" />
+      <font-awesome-icon icon="fas fa-exclamation-circle" v-if="!isValidate" />
       {{ message }}
-      <i class="fas fa-check-circle" v-if="successful" />
     </p>
   </div>
 </template>
@@ -41,24 +57,28 @@
 export default {
   name: 'checkButton',
   props: {
-    value: [String, Number, Array, Boolean],
+    value: [],
+    // checkbox, radio (String)
     type: {
-      // checkbox, radio (String)
       type: String,
       default: 'checkbox'
     },
-    all: {
-      // all check button view false(Boolean)
-      type: Boolean,
-      default: false
+    name: {
+      type: String,
+      required: true
     },
+    // buttons list [](Array)
     items: {
-      // buttons list [](Array)
       type: Array,
       required: true
     },
+    // all check button view false(Boolean)
+    all: {
+      type: Boolean,
+      default: false
+    },
+    // max check able 0(int)
     maxCheck: {
-      // max check able 0(int)
       type: Number,
       default: 0
     },
@@ -66,33 +86,20 @@ export default {
       type: Array,
       default: () => []
     },
-    name: {
-      type: String,
-      required: true
-    },
+    // 강제 에러 출력 - check함수를 수행 하지 않음
     errorMessage: {
-      // 강제 에러 출력 - check함수를 수행 하지 않음 String:''
       type: String,
       default: ''
     },
-    success: Boolean,
-    width: {
-      type: [String, Number],
-      default: ''
-    },
+    // success: Boolean,
     button: {
       type: Boolean,
       default: false
     },
-    color: {
-      type: String,
-      default: 'secondary'
-    }
   },
   data: () => ({
     list: [],
     val: '',
-    max: 0,
     clickIndex: null,
     isValidate: true,
     checkPass: false,
@@ -102,15 +109,17 @@ export default {
   }),
   watch: {
     value(v) {
-      this.val = this.value
+      this.val = v
       this.resetValidate()
     },
     val(v) {
       this.$emit('input', v)
     },
-    items(v) {
-      if (v.length > 0) {
-        this.list = v
+    items(item) {
+      if (item.length > 0) {
+        this.list = [...item]
+
+        this.allButtonAdd()
       }
     },
     validate() {
@@ -128,9 +137,7 @@ export default {
     eventListeners() {
       return {
         ...this.$listeners,
-        input: evt => {
-          this.$emit('input', this.val)
-        },
+        input: evt => {},
         click: evt => {
           this.$emit('click', evt, this.clickIndex)
         }
@@ -142,26 +149,27 @@ export default {
   },
   created() {
     if (this.items) {
-      this.list = this.$copy(this.items)
+      this.list = [...this.items]
     }
 
     if (this.all) {
-      this.list.unshift({ text: '전체 선택', value: '' })
+      this.list.unshift({ text: '전체', value: '' })
     }
 
     if (this.type == 'checkbox') {
       this.val = ['']
     }
 
-    if (this.maxCheck > 0) {
-      this.max = parseInt(this.maxCheck)
-    }
-
-    if (this.value) {
-      this.val = this.value
-    }
+    this.val = this.value
   },
   methods: {
+    allButtonAdd() {
+      if (this.all) {
+        if (this.list[0].value != '') {
+          this.list.unshift({ text: '전체', value: '' })
+        }
+      }
+    },
     setIndex(index) {
       this.clickIndex = index
     },
@@ -177,8 +185,8 @@ export default {
         }
 
         if (this.val.indexOf(v) === -1) {
-          if (this.max > 0) {
-            if (this.val.length < this.max) {
+          if (this.maxCheck > 0) {
+            if (this.val.length < this.maxCheck) {
               this.val.push(v)
             } else {
               evt.preventDefault()
@@ -192,11 +200,10 @@ export default {
       }
     },
     check() {
-      // 폼을 검수하여 값을 반환
-      // 임의로 지정된 에러가 없는 경우
+      // 폼을 검수하여 값을 반환, 임의로 지정된 에러가 없는 경우
       if (this.errorMessage === '') {
         // validate check
-        if (this.validate.length > 0) {
+        if (this.validate.length) {
           for (let i = 0; i < this.validate.length; i++) {
             let result = ''
 
@@ -228,98 +235,79 @@ export default {
       this.errorTransition = false
     },
     resetForm() {
-      if (this.type == 'checkbox') {
+      if (this.type === 'checkbox') {
         this.val = ['']
       } else {
         this.val = ''
       }
-    }
+    },
   }
 }
 </script>
 
-<style scoped>
-label {
-  margin-bottom: 0 !important;
-}
-label input {
-  margin-right: 3px;
-}
-label:not(.box-block) + label {
-  margin-left: 20px;
-}
-label.box-block {
-  margin-bottom: 15px !important;
-}
-.button label span {
-  display: inline-block;
-  padding: 5px 13px;
-  border-width: 1px;
-  border-style: solid;
-}
-.button label:first-child span {
-  border-radius: 4px 0 0 4px;
-}
-.button label:last-child span {
-  border-radius: 0 4px 4px 0;
-}
-.button label + label {
-  margin-left: -1px;
-}
-.button label input {
-  display: none;
+<style lang="scss" scoped>
+.check-button {
+  label {
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  span {
+    color: #5b5b5b;
+    font-size: 14px;
+  }
+
+  .description {
+    font-size: 12px !important;
+    font-weight: normal;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    border: 0 !important;
+    color: #ff5252;
+    text-align: left !important;
+
+    &.error {
+      animation: shaking 0.3s;
+    }
+  }
 }
 
-.button.primary label span {
-  border-color: #1867c0 !important;
-  color: #1867c0 !important;
-}
-.button.primary label span:hover {
-  background-color: #1867c0aa !important;
-  color: #fff !important;
-}
-.button.primary label input:checked + span {
-  background-color: #1867c0;
-  color: #fff !important;
+.check-button.button {
+  margin-top: -5px;
+
+  input {
+    display: none;
+  }
+
+  span {
+    display: inline-block;
+    border: 1px solid #7c7c7c;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+
+  input:checked + span {
+    background-color: #7c7c7c;
+    color: #fff;
+  }
 }
 
-.button.success label span {
-  border-color: #4caf50 !important;
-  color: #4caf50 !important;
-}
-.button.success label span:hover {
-  background-color: #4caf50aa !important;
-  color: #fff !important;
-}
-.button.success label input:checked + span {
-  background-color: #4caf50 !important;
-  color: #fff !important;
-}
-
-.button.info label span {
-  border-color: #5cbbf6 !important;
-  color: #5cbbf6 !important;
-}
-.button.info:hover label span:hover {
-  background-color: #5cbbf6aa !important;
-  color: #fff !important;
-}
-.button.info label input:checked + span {
-  background-color: #5cbbf6 !important;
-  color: #fff !important;
-}
-
-.button.secondary label span {
-  border-color: #6c757d !important;
-  color: #6c757d !important;
-  transition: all .2s linear;
-}
-.button.secondary:hover label span:hover {
-  background-color: #6c757daa !important;
-  color: #fff !important;
-}
-.button.secondary label input:checked + span {
-  background-color: #6c757d !important;
-  color: #fff !important;
+/* error message shaking */
+@keyframes shaking {
+  0% {
+    transform: translateX(10px);
+  }
+  25% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(10px);
+  }
 }
 </style>

@@ -9,7 +9,8 @@ const routes = [
   { path: '/spinner', name: 'spinner', component: () => import('@/views/spinner') },
   { path: '/toast', name: 'toast', component: () => import('@/views/toast') },
   { path: '/pagination', name: 'pagination', component: () => import('@/views/pagination') },
-  { path: '/tooltip', name: 'paginationtooltip', component: () => import('@/views/tooltip') },
+  { path: '/tooltip', name: 'tooltip', component: () => import('@/views/tooltip') },
+  { path: '/form', name: 'form', component: () => import('@/views/form') },
 ]
 
 const router = new VueRouter({

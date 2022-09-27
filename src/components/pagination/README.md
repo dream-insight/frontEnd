@@ -1,9 +1,9 @@
-# Toast message component plugin
+# Pagination component
 
 # 1. 사용방법
 ```javascript
 // main.js
-import pagination from '@/components/toast'
+import pagination from '@/components/pagination'
 Vue.component('pagination', pagination)
 ```
 
@@ -41,10 +41,10 @@ export default {
 
 # 2. Props
 | Name | Type | Default | Require | Description |
-|-------|---- |---------|---------|-------------|
+|------|------|---------|---------|-------------|
 | value | Number | <code>none</code> | *true* | page 번호 (v-model) |
 | total | Number | <code>0</code> | false | 페이지 넘버링을 만들 전체 수량 |
-| size | Number | <code>10</code> | false | 페이지당 나눌 total 수량 (total / size) |
+| size | Number | <code>10</code> | false | 페이지당 나눌 크키 (total / size) |
 | block | Number | <code>10</code> | false | 페이지 넘버링 수량 |
 
 ## 3. 그 외

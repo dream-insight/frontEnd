@@ -6,7 +6,6 @@
 * [Vue 2.x](https://v2.vuejs.org/)
 * [SCSS](https://sass-lang.com/)
 * [작성 참조 - AirBnB](https://github.com/tipjs/javascript-style-guide)
-* [Vue2.x 컴포넌트 모음](https://github.com/dream-insight/frontEnd/tree/main/src)
 ---
 
 ## 목차
@@ -29,6 +28,8 @@
 16. [이벤트 버스](#16-이벤트-버스)
 17. [상태 관리자 Vuex](#17-상태-관리자-Vuex)
 18. [라우터 Router](#18-라우터-Router)
+
+* [Vue2.x Component & Plugin 모음](https://github.com/dream-insight/frontEnd/tree/main/src)
 
 ---
 
