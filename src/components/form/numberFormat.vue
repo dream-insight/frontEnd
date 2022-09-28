@@ -68,11 +68,6 @@ export default {
       type: Boolean,
       default: false
     },
-    // 마이너스 값 입력 불가
-    isPositive: {
-      type: Boolean,
-      default: false,
-    },
     // 폼 검증이 완료된 경우 check icon 표시 여부 Boolean: false (사용 보류)
     success: {
       type: Boolean,
@@ -108,18 +103,18 @@ export default {
         }, 300)
       }
     },
-    value(after, before) {
+    value(v) {
       // 외부에서 model이 업데이트 되도 유효성 검사
-      if (after !== '') {
+      if (v !== '') {
         this.message = ''
         this.isValidate = true
         this.errorTransition = false
 
-        this.$refs.input.value = this.format(after)
+        this.$refs.input.value = this.format(v)
         this.updateValue()
       }
     },
-    validate(obj) {
+    validate() {
       this.message = ''
       this.isValidate = true
       this.errorTransition = false
@@ -160,18 +155,6 @@ export default {
         this.$emit('input', 0)
       }
     },
-    updateValue() {
-      let value = this.isPositive
-        ? this.valueText.value.replace(/[^\d]/g, '').replace(/^$/, 0)
-        : this.valueText.value.replace(/[^\d\-]/g, '').replace(/\-{2,}/g, '-').replace(/^$/, 0)
-
-      value = (value.charAt(0) === '-') ? '-'.concat(value.replace(/[-]/g, '')) : value.replace(/[-]/g, '')
-
-      if (!isNaN(value)) {
-        this.valueText.value = this.format(value)
-        this.$emit('input', parseInt(value, 10))
-      }
-    },
     format(v) {
       if (v !== '') {
         let minus = parseFloat(v) >= 0 ? false : true
@@ -191,6 +174,16 @@ export default {
       }
 
       return ''
+    },
+    updateValue() {
+      let value = this.valueText.value.replace(/[^\d\-]/g, '').replace(/\-{2,}/g, '-').replace(/^$/, 0)
+
+      value = (value.charAt(0) === '-') ? '-'.concat(value.replace(/[-]/g, '')) : value.replace(/[-]/g, '')
+
+      if (!isNaN(value)) {
+        this.valueText.value = this.format(value)
+        this.$emit('input', parseInt(value, 10))
+      }
     },
     check() {
       // 임의로 지정된 에러가 없는 경우

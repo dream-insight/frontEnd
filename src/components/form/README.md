@@ -222,7 +222,6 @@ export default {
 | disabled | Boolena | <code>false</code> | false | 폼 사용불가 처리 |
 | readonly | Boolena | <code>false</code> | false | 폼 입력 불가 처리 |
 | autofocus | Boolena | <code>false</code> | false | 화면 로드시 커서가 자동으로 들오 오도록 할 것인지 |
-| isPositive | Boolena | <code>false</code> | false | 마이너스(-)값 입력 불가 설정 |
 
 :arrow_up: [목차](#-Form-validation-Components)
 
