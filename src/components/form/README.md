@@ -101,7 +101,7 @@ export default {
 ---
 
 ## 2. inputField
-  * <code>\<input type="text" /></code>, <code>\<textarea>\</textarea></code> 폼을 표시 해줍니다.
+  * <code>\<input type="text" /></code>, <code>\<textarea>\</textarea></code> 입력 필드를 생성 합니다.
 
 ### 2.1. 사용방법
 ```vue
@@ -177,7 +177,7 @@ export default {
 ---
 
 ## 3. numberFormat
-  * <code>\<input type="text" /></code> 폼에 숫자만 입력 가능한 필드를 생성합니다
+  * <code>\<input type="text" /></code> 폼에 숫자만 입력 가능한 필드를 생성합니다.
   * 자동으로 1,000 단위로 콤마를 생성 해줍니다.
   * model 변수에는 숫자(<code>Number</code>)형으로 입력됩니다.(콤마가 모두 제거된 상태의 Number Casting)
   * 필드 값이 없을 경우 자동으로 0을 표시 합니다.
@@ -228,7 +228,7 @@ export default {
 ---
 
 ## 4. selectBox
-  * <code>\<select>\<option>\</option>\</select></code> 폼을 생성합니다.
+  * <code>\<select>\<option>\</option>\</select></code> 선택 폼을 생성합니다.
   * <code>placeholder</code> 옵션을 설정하지 않을 경우, <code>options</code> 첫 번째 값이 기본적으로 선택됩니다.
 
 ### 4.1. 사용방법
@@ -280,8 +280,8 @@ export default {
 ---
 
 ## 5. switchButton
-  * 좌, 우로 이동하는 형태의 버튼을 생성합니다.
-  * 값은 true(ON), false(OFF) 또는 이에 대칭하는 2개의 값을 설정 가능합니다.
+  * 스위치 형태의 버튼을 생성합니다.
+  * true(ON), false(OFF) 또는 이에 대칭하는 2개의 값을 설정 가능합니다.
 
 ### 5.1. 사용방법
 ```vue
