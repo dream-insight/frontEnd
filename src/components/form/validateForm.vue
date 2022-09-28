@@ -51,9 +51,10 @@ export default {
       }
     },
     componentCheck(el, flag) {
-      const vueDom = [
-        'inputField', 'numberFormat', 'selectBox', 'switchButton', 'checkButton',
-        'orgSelect', 'datePicker', 'findPostCode', 'attachFile'
+      const checkList = [
+        'inputField', 'numberFormat',
+        'selectBox', 'switchButton',
+        'checkButton', 'validateWrap'
       ]
 
       // 컴포넌트인지 체크 후 필요한 처리를 한다.
@@ -61,7 +62,7 @@ export default {
         let tag = el.$vnode.tag.split('-')
         let tagName = tag[tag.length - 1]
 
-        if (vueDom.indexOf(tagName) > -1) {
+        if (checkList.indexOf(tagName) > -1) {
           if (flag == 'reset') {
             el.resetForm()
           } else {

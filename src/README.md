@@ -7,6 +7,6 @@
 3. [토스트 메시지 (toast message plugin)](https://github.com/dream-insight/frontEnd/tree/main/src/components/toast)
 4. [페이지네이션 (pagination component)](https://github.com/dream-insight/frontEnd/tree/main/src/components/pagination)
 5. [툴팁 (tooltip component)](https://github.com/dream-insight/frontEnd/tree/main/src/components/tooltip)
-6. [Form (validate forms component)](https://github.com/dream-insight/frontEnd/tree/main/src/components/form)
+4. [Form (validate forms component)](https://github.com/dream-insight/frontEnd/tree/main/src/components/form)
 
 :arrow_left: [Vue2.x 컨벤션](https://github.com/dream-insight/frontEnd)

@@ -32,6 +32,7 @@
           />
         </p>
         <p>
+          <h5>input field</h5>
           <input-field
             block
             placeholder="이곳에 입력해주세요"
@@ -40,6 +41,7 @@
           />
         </p>
         <p>
+          <h5>textarea</h5>
           <input-field
             block
             multiline
@@ -50,13 +52,42 @@
           />
         </p>
         <p>
+          <h5>input field number</h5>
           <number-format
             :validate="rules.input"
             v-model="number"
           />
         </p>
-        <!-- <p><select-box /></p>
-        <p><switch-button /></p> -->
+        <p>
+          <h5>select box</h5>
+          <select-box
+            placeholder="한 가지 항목을 선택해주세요"
+            :validate="rules.select"
+            :options="opt.select"
+            v-model="select"
+          />
+        </p>
+        <p>
+          <h5>switch button</h5>
+          <switch-button validate="설정으로 바꿔주세요." v-model="bool" />
+        </p>
+        <p>
+          <h5>small size switch button</h5>
+          <switch-button
+            small
+            validate
+            true-value="T"
+            false-value="F"
+            :label="label"
+            v-model="boolValue"
+          />
+        </p>
+        <p>
+          <h5>validate wrapping</h5>
+          <validate-wrap :validate="rules.file" :check-value="files">
+            <input type="file" @change="fileSelected" />
+          </validate-wrap>
+        </p>
       </validate-form>
 
       <p>
@@ -78,25 +109,39 @@ export default {
       area: '',
       number: 0,
       select: '',
-      switch: false,
+      bool: false,
+      boolValue: 'T',
+      label: ['동의 안함', '동의'],
+      files: [],
 
       opt: {
         checkbox: [],
+        select: [],
       },
 
       rules: {
         checkbox: [v => !(v.length == 0) || '항목을 하나 이상 선택해주세요.'],
         radio: [v => !!v || '항목을 하나 선택해주세요.'],
-        input: [v => !!v || '필수 입력 항목입니다.']
+        input: [v => !!v || '필수 입력 항목입니다.'],
+        select: [v => !!v || '필수 선택 항목입니다.'],
+        file: [v => !!v.legth || '파일을 선택해주세요.'],
       }
     }
   },
   created() {
     for (let value = 1; value <= 10; value++) {
       this.opt.checkbox.push({ text: `체크버튼${value}`, value })
+      this.opt.select.push({ text: `선택 - ${value}`, value })
     }
   },
   methods: {
+    fileSelected(evt) {
+      if (evt.target.files.length) {
+        this.files = evt.target.files
+      } else {
+        this.files = []
+      }
+    },
     validate() {
       this.$refs.form.validate()
     }
@@ -105,7 +150,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.wrap { width: 400px; }
+.wrap {
+  width: 400px;
+}
+
 h5 {
   margin-bottom: 5px;
 }

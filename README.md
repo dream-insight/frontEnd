@@ -12,7 +12,7 @@
 
 1. [기본 형태](#1-기본-형태)
 2. [명명 규칙](#2-명명-규칙)
-3. [변수 선언과 데이터형](#3-변수-선언과-데이터형)
+3. [변수 선언과 자료형](#3-변수-선언과-자료형)
 4. [함수](#4-함수)
 5. [화살표 함수](#5-화살표-함수)
 6. [오브젝트 프로퍼티](#6-오브젝트-프로퍼티)
@@ -197,7 +197,7 @@ import codeLib from './module'
 
 ---
 
-## 3. 변수 선언과 데이터형
+## 3. 변수 선언과 자료형
 
 ### 3.1. 기본 형태의 Vue v2.x은 Type Script를 사용하기 어려운 관계로 필히 변수 선언시 타입에 맞게 정의 합니다.
 ```vue
@@ -245,7 +245,7 @@ export default {
   ```
 
 ### 3.3. 변수 scope
-* 변수 선언시에는 <code>let, const</code> block scoped 선언 하고, <code>var</code>로 선언하지 마세요.
+* 변수 선언시에는 <code>let, const</code> block scoped 선언 하고, <code>var</code> 선언하지 않습니다.
 * 상수는 <code>const</code>사용 하고, 이는 <code>export default</code> 블럭 밖에서 선언이 가능 합니다.
 * 재할당 가능한 변수는 <code>let</code>으로 선언 하고, <code>export default</code> 블럭 밖에서 선언하지 않도록 합니다.
 ```vue
@@ -450,7 +450,7 @@ export default {
   methods: {
     // Bad
     isUserName() {
-      if (this.name.substr(0, 1) != '김') {
+      if (this.name.substr(0, 1) !== '김') {
         return false
       } else {
         this.familyName = this.name.substr(0, 1)
@@ -458,7 +458,7 @@ export default {
     },
     // Good
     setFamilyName() {
-      if (this.name.substr(0, 1) !=  '김') {
+      if (this.name.substr(0, 1) !== '김') {
         return
       }
 
@@ -484,7 +484,7 @@ export default {
   methods: {
     // Bad
     getSizeOfArray(prm) {
-      if (params === undefined) {
+      if (prm === undefined) {
         prm = []
       }
 
@@ -1977,4 +1977,11 @@ const routes = [
 
 ---
 
+## 19. .env 활용
+
+:arrow_up: [목차](#목차)
+
+---
+
 * 초안 작성 2022.09.26일 완료 (작성자: 김종윤 수석 매니저)
+*

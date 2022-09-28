@@ -169,7 +169,7 @@ export default {
 
       if (!isNaN(value)) {
         this.valueText.value = this.format(value)
-        this.$emit('input', parseInt(value))
+        this.$emit('input', parseInt(value, 10))
       }
     },
     format(v) {
@@ -177,7 +177,7 @@ export default {
         let minus = parseFloat(v) >= 0 ? false : true
         let find = /(\d+)(\d{3})/
         let spNum = v.toString().split('.')
-        let num = parseInt(spNum[0].replace(/[^0-9]/g, '')).toString()
+        let num = parseInt(spNum[0].replace(/[^0-9]/g, ''), 10).toString()
 
         while (find.test(num)) {
           num = num.replace(find, '$1' + ',' + '$2')
