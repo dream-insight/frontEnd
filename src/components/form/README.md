@@ -7,8 +7,9 @@
 * [numberFormat](#3-numberFormat)
 * [selectBox](#4-selectBox)
 * [switchButton](#5-switchButton)
-* [validateWrap](#6-validateWrap)
-* [validateForm](#7-validateForm)
+* [datePicker](#6-datePicker)
+* [validateWrap](#7-validateWrap)
+* [validateForm](#8-validateForm)
 
 ---
 
@@ -338,10 +339,55 @@ export default {
 
 ---
 
-## 6. validateWrap
-  * 유효성 검사가 필요한 개체를 감싸고, model 변수를 설정하여 validateForm과 호환 되도록 만들어줍니다.
+## 6. datePicker
+  * 날짜 선택 가능한 입력 필드를 생성합니다.
 
 ### 6.1. 사용방법
+```vue
+<template>
+  <div>
+    <p>
+      <date-picker :validate="rule" v-model="date" />
+    </p>
+    <p>
+      <date-picker range v-model="dateRage" />
+    </p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      date: '',
+      dateRange: ['', ''],
+      rule: [v => !!v.length || '날짜를 선택해주세요.']
+    }
+  },
+}
+</script>
+```
+
+### 6.2. Props
+
+| Name | Type | Default | Require | Description |
+|-------|---- |---------|---------|-------------|
+| value | String, Array | <code>none</code> | false | v-model, option range 설정시 ['', ''] 설정 필요 |
+| validate | Array | <code>[Function]</code> | false | 폼 유효성 검사에 필요한 callback 함수를 배열에 나열 입력 |
+| placeholder | String, Array | <code>none</code> | false | 입력 필드에 placeholder 표시, option range 설정시 [시작일, 종료일] 형태로 입력 |
+| range | Boolean | <code>false</code> | false | 시작일과 종료일을 선택할 수 있도록 설정 |
+| separator | String | <code>-</code> | false | 년, 월, 일 사이 구분 문자 설정 |
+| minYear | Number | <code>1900</code> | false | 선택 가능한 최소 년도 설정 |
+| maxYear | Number | <code>now Year + 100</code> | false | 선택 가능한 최대 년도 설정 |
+
+:arrow_up: [목차](#-Form-validation-Components)
+
+---
+
+## 7. validateWrap
+  * 유효성 검사가 필요한 개체를 감싸고, model 변수를 설정하여 validateForm과 호환 되도록 만들어줍니다.
+
+### 7.1. 사용방법
 ```vue
 <template>
   <div>
@@ -365,7 +411,7 @@ export default {
 </script>
 ```
 
-### 6.2. Props
+### 7.2. Props
 
 | Name | Type | Default | Require | Description |
 |-------|---- |---------|---------|-------------|
@@ -377,14 +423,14 @@ export default {
 
 ---
 
-## 7. validateForm
+## 8. validateForm
   * validateForm 하위 호환 가능한 개체에 대해 유효성 검사 가능한 컴포넌트
   * validateForm 컴포넌트에 반듯이 <code>ref</code> 설정을 하고 <code>$refs.{refName}.validate()</code> 수행하여 유효성 검사를 진행합니다.
 
-### 7.1. 사용방법
+### 8.1. 사용방법
 > validateForm 예제를 확인 하세요. [예제 보기](https://github.com/dream-insight/frontEnd/blob/main/src/views/form.vue)
 
-### 7.2. Component API Method
+### 8.2. Component API Method
 #### <code>Boolean $refs.{refName}.validate()</code>
 * 유효성 검사를 실행 합니다.
 

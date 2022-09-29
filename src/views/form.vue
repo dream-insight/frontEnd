@@ -83,6 +83,14 @@
           />
         </p>
         <p>
+          <h5>date picker</h5>
+          <date-picker :validate="rules.date" v-model="date" />
+        </p>
+        <p>
+          <h5>range date picker</h5>
+          <date-picker range :validate="rules.date" v-model="dateRange" />
+        </p>
+        <p>
           <h5>validate wrapping</h5>
           <validate-wrap :validate="rules.file" :check-value="files">
             <input type="file" @change="fileSelected" />
@@ -112,6 +120,8 @@ export default {
       bool: false,
       boolValue: 'T',
       label: ['동의 안함', '동의'],
+      date: '',
+      dateRange: ['', ''],
       files: [],
 
       opt: {
@@ -125,6 +135,7 @@ export default {
         input: [v => !!v || '필수 입력 항목입니다.'],
         select: [v => !!v || '필수 선택 항목입니다.'],
         file: [v => !!v.legth || '파일을 선택해주세요.'],
+        date: [v => !!v || '날짜를 선택해주세요.']
       }
     }
   },

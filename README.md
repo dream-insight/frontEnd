@@ -316,8 +316,6 @@ export default {
 
 ## 4. 함수
 ### 4.1. watch, computed, methods 등에 함수 정의시 단축구문을 이용하세요.
-  > 단, computed에 간단한 연산 반환에 대해서는 람다식을 허용합니다.
-
 ```vue
 <script>
 export default {
@@ -328,9 +326,9 @@ export default {
   },
   watch: {
     // Bad
-    nameCheck: (val, preVal) => {
+    nameCheck: function(val, preVal) {
       ...
-    }
+    },
     // Good
     checkName(val, preVal) {
       ...
@@ -338,15 +336,16 @@ export default {
   },
   computed: {
     // Bad
-    nameText: () => this.name + '씨\n 드림 인사이트 방문을 환영합니다.\n' + this.name.substr(0, 2) + '님 좋은 시간 보내세요.'
-    // it's okay
-    nameChange: () => this.name + '님',
+    nameComment: function() {
+      let text  = this.name.substr(0, 1) + '씨\n 드림 인사이트 방문을 환영합니다.\n' +
+                  this.name.substr(0, 2) + '님 좋은 시간 보내세요'
+
+      return text
+    },
     // Good
     nameComment() {
-      let text  = this.name.substr(0, 1) +
-                  '씨\n 드림 인사이트 방문을 환영합니다.\n' +
-                  this.name.substr(0, 2) +
-                  '님 좋은 시간 보내세요'
+      let text  = this.name.substr(0, 1) + '씨\n 드림 인사이트 방문을 환영합니다.\n' +
+                  this.name.substr(0, 2) + '님 좋은 시간 보내세요'
 
       return text
     }

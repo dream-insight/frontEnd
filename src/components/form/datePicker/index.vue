@@ -1,13 +1,10 @@
 <template>
-  <div class="date-picker">
-    <template v-if="range">
-      <div
-        :class="['wrap', { error: onError }]"
-        @click="toggleCalendar">
-        <div class="picker-date-text">
+  <div :class="['date-picker', { error: onError }]">
+    <div class="wrap" @click="toggleCalendar">
+      <div class="picker-date-text">
+        <template v-if="range">
           <input
             type="text"
-            style="width: 140px"
             :placeholder="holderText[0]"
             :value="value[0]"
           />
@@ -15,19 +12,29 @@
           &nbsp;&nbsp;~&nbsp;&nbsp;
           <input
             type="text"
-            style="width: 140px"
             :placeholder="holderText[1]"
             :value="value[1]"
           />
           <font-awesome-icon class="ml-1" icon="fas fa-calendar-alt" />
-        </div>
+        </template>
 
-        <p :class="['description', { error: errorTransition }]" v-if="!isValidate">
-          <font-awesome-icon icon="fas fa-exclamation-circle" />
-          {{message}}
-        </p>
+        <template v-else>
+          <input
+            type="text"
+            :placeholder="holderText"
+            :value="value"
+          />
+          <font-awesome-icon class="ml-1" icon="fas fa-calendar-alt" />
+        </template>
       </div>
 
+      <p :class="['description', { error: errorTransition }]" v-if="!isValidate">
+        <font-awesome-icon icon="fas fa-exclamation-circle" />
+        {{ message }}
+      </p>
+    </div>
+
+    <template v-if="range">
       <transition name="picker-scale">
         <div id="picker" class="picker-popup" v-show="isShow">
           <div class="search-date">
@@ -42,49 +49,17 @@
           <div class="picker-wrap" tabindex="0">
             <div class="calendar start_calendar">
               <div class="start-end-text">시작일</div>
-              <div class="select-year-month" v-show="changeYearMonthMode">
-                <select
-                  v-model="startYear"
-                  @change="changSelectBox">
-                  <option
-                    :key="`sy${num}`"
-                    v-for="num in opt.year">
-                    {{ num }}
-                  </option>
-                </select> 년
-                <select
-                  v-model="startMonth"
-                  @change="changSelectBox">
-                  <option
-                    :key="`sm${num}`"
-                    v-for="num in opt.month">
-                    {{ num + 1 }}
-                  </option>
-                </select> 월
-                <div right name="redo" @click="changeYearMonthMode = false"></div>
-              </div>
-              <div class="select-month" v-show="!changeYearMonthMode">
-                <button type="button" class="prev2" @click="changeMonth('start', -12)">
-                  <font-awesome-icon class="arrow-icon" icon="fas fa-angle-double-left" />
-                </button>
 
-                <button type="button" class="prev" @click="changeMonth('start', -1)">
-                  <font-awesome-icon class="arrow-icon" icon="fas fa-angle-left" />
-                </button>
-
-                <span @dblclick="changeYearMonth">
-                  <em>{{startYear}}년</em>
-                  <em>{{startMonth + 1}}월</em>
-                </span>
-
-                <button type="button" class="next" @click="changeMonth('start', 1)">
-                  <font-awesome-icon class="arrow-icon" icon="fas fa-angle-right" />
-                </button>
-
-                <button type="button" class="next2" @click="changeMonth('start', 12)">
-                  <font-awesome-icon class="arrow-icon" icon="fas fa-angle-double-right" />
-                </button>
-              </div>
+              <date-controller
+                :is-show="isShow"
+                :year="startYear"
+                :month="startMonth"
+                :max-year="maxYear"
+                :min-year="minYear"
+                @change-month="changeMonth('start', $event)"
+                @set-year="changeYearMonth('start', 'Year', $event)"
+                @set-month="changeYearMonth('start', 'Month', $event)"
+              />
 
               <div class="select-calendar-wrap">
                 <transition :name="startTransitionName">
@@ -114,49 +89,17 @@
             </div>
             <div class="calendar end_calendar">
               <div class="start-end-text">종료일</div>
-              <div class="select-year-month" v-if="changeYearMonthMode">
-                <select
-                  @change="changSelectBox($event, 'end')"
-                  v-model="endYear">
-                  <option
-                    :key="`ey${num}`"
-                    v-for="num in opt.year">
-                    {{ num }}
-                  </option>
-                </select> 년
-                <select
-                  @change="changSelectBox($event, 'end')"
-                  v-model="endMonth">
-                  <option
-                    :key="`em${num}`"
-                    v-for="num in opt.month">
-                    {{ num + 1 }}
-                  </option>
-                </select> 월
-                <div right name="redo" @click="changeYearMonthMode = false"></div>
-              </div>
-              <div class="select-month" v-show="!changeYearMonthMode">
-                <button type="button" class="prev2" @click="changeMonth('end', -12)">
-                  <font-awesome-icon class="arrow-icon" icon="fas fa-angle-double-left" />
-                </button>
 
-                <button type="button" class="prev" @click="changeMonth('end', -1)">
-                  <font-awesome-icon class="arrow-icon" icon="fas fa-angle-left" />
-                </button>
-
-                <span @dblclick="changeYearMonth">
-                  <em>{{ endYear }}년</em>
-                  <em>{{ endMonth + 1 }}월</em>
-                </span>
-
-                <button type="button" class="next" @click="changeMonth('end', 1)">
-                  <font-awesome-icon class="arrow-icon" icon="fas fa-angle-right" />
-                </button>
-
-                <button type="button" class="next2" @click="changeMonth('end', 12)">
-                  <font-awesome-icon class="arrow-icon" icon="fas fa-angle-double-right" />
-                </button>
-              </div>
+              <date-controller
+                :is-show="isShow"
+                :year="endYear"
+                :month="endMonth"
+                :max-year="maxYear"
+                :min-year="minYear"
+                @change-month="changeMonth('end', $event)"
+                @set-year="changeYearMonth('end', 'Year', $event)"
+                @set-month="changeYearMonth('end', 'Month', $event)"
+              />
 
               <div class="select-calendar-wrap">
                 <transition :name="endTransitionName">
@@ -198,73 +141,25 @@
         </div>
       </transition>
     </template>
-    <!-- 날짜 단일 선택 달려 -->
+
+    <!-------------------------------- 날짜 단일 선택 달력 ---------------------------------->
     <template v-else>
-      <div :class="['wrap', {error: onError}]" @click="toggleCalendar">
-        <div class="picker-date-text">
-          <input
-            type="text"
-            style="width: 140px"
-            :placeholder="holderText"
-            :value="value"
-          />
-          <font-awesome-icon class="ml-1" icon="fas fa-calendar-alt" />
-        </div>
-
-        <p :class="['description', {error: errorTransition}]" v-if="!isValidate">
-          <font-awesome-icon icon="fas fa-exclamation-circle" v-if="!isValidate" />
-          {{message}}
-        </p>
-      </div>
-
       <transition name="picker-scale">
         <div id="picker" class="picker-popup single" v-show="isShow">
           <div class="picker-wrap">
             <div class="calendar-inner">
               <div class="calendar">
-                <div class="select-year-month" v-if="changeYearMonthMode">
-                  <select
-                    v-model="startYear"
-                    @change="changSelectBox">
-                    <option
-                      :key="`sy${num}`"
-                      v-for="num in opt.year">
-                      {{ num }}
-                    </option>
-                  </select> 년
-                  <select
-                    v-model="startMonth"
-                    @change="changSelectBox">
-                    <option
-                      :key="`sm${num}`"
-                      v-for="num in opt.month">
-                      {{ num + 1 }}
-                    </option>
-                  </select> 월
-                  <div right name="redo" @click="changeYearMonthMode = false"></div>
-                </div>
-                <div class="select-month" v-show="!changeYearMonthMode">
-                  <button type="button" class="prev2" @click="changeMonth('start', -12)">
-                    <font-awesome-icon class="arrow-icon" icon="fas fa-angle-double-left" />
-                  </button>
 
-                  <button type="button" class="prev" @click="changeMonth('start', -1)">
-                    <font-awesome-icon class="arrow-icon" icon="fas fa-angle-left" />
-                  </button>
-
-                  <span @dblclick="changeYearMonth">
-                    <em>{{ startYear }}년</em>
-                    <em>{{ startMonth + 1 }}월</em>
-                  </span>
-
-                  <button type="button" class="next" @click="changeMonth('start', 1)">
-                    <font-awesome-icon class="arrow-icon" icon="fas fa-angle-right" />
-                  </button>
-
-                  <button type="button" class="next2" @click="changeMonth('start', 12)">
-                    <font-awesome-icon class="arrow-icon" icon="fas fa-angle-double-right" />
-                  </button>
-                </div>
+                <date-controller
+                  :is-show="isShow"
+                  :year="startYear"
+                  :month="startMonth"
+                  :max-year="maxYear"
+                  :min-year="minYear"
+                  @change-month="changeMonth('start', $event)"
+                  @set-year="changeYearMonth('start', 'Year', $event)"
+                  @set-month="changeYearMonth('start', 'Month', $event)"
+                />
 
                 <div class="select-calendar-wrap">
                   <transition :name="startTransitionName">
@@ -301,41 +196,13 @@
 </template>
 
 <script>
-Date.prototype.getDateFormat = function(format, days = 0) {
-  let date = this
-
-  if (days !== 0) {
-    const time = date.getTime()
-    date = new Date(time + (86400 * days * 1000))
-  }
-
-  let year = date.getYear()
-  let month = date.getMonth() + 1
-  let day = date.getDate()
-  let dYear = date.getFullYear()
-  let dMonth = month
-  let dDay = day
-
-  if (month.toString().length === 1) {
-    dMonth = `0${month}`
-  }
-
-  if (day.toString().length === 1) {
-    dDay = `0${day}`
-  }
-
-  format = format.replace('Y', dYear)
-  format = format.replace('m', dMonth)
-  format = format.replace('d', dDay)
-  format = format.replace('y', year)
-  format = format.replace('n', month)
-  format = format.replace('j', day)
-
-  return format
-}
+import dateController from './dateController'
 
 export default {
   name: 'datePicker',
+  components: {
+    dateController
+  },
   props: {
     value: [String, Array],
     validate: {
@@ -344,17 +211,15 @@ export default {
     },
     placeholder: {
       type: [String, Array],
-      default: ''
     },
     range: {
       type: Boolean,
       default: false
     },
-    format: String,
-    showRight: String,          // 오른쪽 기준으로 팝업 표시
-    noSeparator: {              // 구분자 표시 여부 (dash - 없음)
-      type: Boolean,
-      default: false
+    // 년, 월, 일 사이 구분 표시
+    separator: {
+      type: String,
+      default: '-'
     },
     minYear: {
       type: Number,
@@ -404,8 +269,6 @@ export default {
       endMonth: 11,
       endDay: 1,
 
-      // 년월일 변경 모드
-      changeYearMonthMode: false,
       opt: { year: [], month: [] },
 
       startSelectedDate: '',
@@ -453,43 +316,39 @@ export default {
   },
   computed: {
     startDate() {
+      let v = this.startSelectedDate
+
       // 시작일 종료일 텍스트 표시 선택된 날짜가 있는 경우 선택된 날짜로 표시
       if (this.startSelectedDay === 0) {
-        return this.dateFormat(this.startYear, this.startMonth, this.startDay)
-      } else {
-        return this.startSelectedDate
+        v = this.dateFormat(this.startYear, this.startMonth, this.startDay)
       }
+
+      return v
     },
     endDate() {
+      let v = this.endSelectedDate
+
       if (this.endSelectedDay === 0) {
-        return this.dateFormat(this.endYear, this.endMonth, this.endDay)
-      } else {
-        return this.endSelectedDate
+        v = this.dateFormat(this.endYear, this.endMonth, this.endDay)
       }
+
+      return v
     },
     selectedDateView() {
+      let v = ''
+
       if (this.selectedError != '') {
-        return this.selectedError
+        v = this.selectedError
       } else if (this.startSelectedDate !== '' && this.endSelectedDate !== '') {
-        return `${this.startSelectedDate} ~ ${this.endSelectedDate}`
-      } else {
-        return ''
+        v = `${this.startSelectedDate} ~ ${this.endSelectedDate}`
       }
+
+      return ''
     },
   },
   created() {
     this.init()
     this.makeCanlendar('start')
-
-    let year = this.maxYear
-
-    for (let i = year; i >= this.minYear; i--) {
-      this.opt.year.push(i)
-    }
-
-    for (let i = 0; i < 12; i++) {
-      this.opt.month.push(i)
-    }
 
     if (this.range) {
       this.makeCanlendar('end')
@@ -555,7 +414,7 @@ export default {
       // 달력 표시 전 처리
       const bodyRect = document.body.getBoundingClientRect()
       const rect = this.$el.getBoundingClientRect()
-      const pickerWidth = this.range ? 584 : 584 / 2
+      const pickerWidth = this.range ? 480 : 230
       const pickerHeight = this.range ? 454 : 280
 
       // 포지션이 아래쪽으로 치우쳤다면 위로 나오게 변경한다.
@@ -681,7 +540,7 @@ export default {
         } else {
           this[flag + 'TransitionName'] = 'trans-right'
         }
-
+        console.log(flag + 'TransitionName', this[flag + 'TransitionName'])
         this[flag + 'Show'] = false
 
         clearTimeout(this[flag + 'Timeout'])
@@ -692,12 +551,12 @@ export default {
         }, 150)
       }
     },
-    changSelectBox($evt, flag = 'start') {
+    changeYearMonth(flag, target, value) {
       // 년 월 select box 변경 이벤트
-      this[flag + $evt.target.name] = parseInt($evt.target.value)
+      this[flag + target] = value
 
       // transition animate
-      this[flag + 'TransitionName'] = 'trans-left'
+      this[flag + 'TransitionName'] = 'trans-down'
       this[flag + 'Show'] = false
 
       clearTimeout(this[flag + 'Timeout'])
@@ -735,44 +594,46 @@ export default {
         }
       }
 
+      let format = `Y${this.separator}m${this.separator}d`
+
       switch (flag) {
         case 0:
-          this.startSelectedDate = date.getDateFormat('Y-m-d', 0)
-          this.endSelectedDate = date.getDateFormat('Y-m-d', 0)
+          this.startSelectedDate = date.getDateFormat(format, 0)
+          this.endSelectedDate = date.getDateFormat(format, 0)
           break
         case 1:
-          this.startSelectedDate = date.getDateFormat('Y-m-d', -1)
-          this.endSelectedDate = date.getDateFormat('Y-m-d', -1)
+          this.startSelectedDate = date.getDateFormat(format, -1)
+          this.endSelectedDate = date.getDateFormat(format, -1)
           break
         case 2:
-          this.startSelectedDate = date.getDateFormat('Y-m-d', -6)
-          this.endSelectedDate = date.getDateFormat('Y-m-d', 0)
+          this.startSelectedDate = date.getDateFormat(format, -6)
+          this.endSelectedDate = date.getDateFormat(format, 0)
           break
         case 3:
-          this.startSelectedDate = date.getDateFormat('Y-m-d', -29)
-          this.endSelectedDate = date.getDateFormat('Y-m-d', 0)
+          this.startSelectedDate = date.getDateFormat(format, -29)
+          this.endSelectedDate = date.getDateFormat(format, 0)
           break
         case 4:
-          this.startSelectedDate = year + '-' + month + '-01'
-          this.endSelectedDate = year + '-' + month + '-' + day
+          this.startSelectedDate = `${year}${this.separator}${month}${this.separator}01`
+          this.endSelectedDate = `${year}${this.separator}${month}${this.separator}${day}`
           break
         case 5:
-          this.startSelectedDate = year + '-' + month + '-01'
-          this.endSelectedDate = year + '-' + month + '-' + day
+          this.startSelectedDate = `${year}${this.separator}${month}${this.separator}01`
+          this.endSelectedDate = `${year}${this.separator}${month}${this.separator}${day}`
           break
       }
 
       // 해당 달력으로 변환
-      let start = this.startSelectedDate.split('-')
-      let end = this.endSelectedDate.split('-')
+      let start = this.startSelectedDate.split(this.separator)
+      let end = this.endSelectedDate.split(this.separator)
 
-      this.startYear = parseInt(start[0])
-      this.startMonth = parseInt(start[1]) - 1
-      this.startDay = parseInt(start[2])
+      this.startYear = parseInt(start[0], 10)
+      this.startMonth = parseInt(start[1], 10) - 1
+      this.startDay = parseInt(start[2], 10)
 
-      this.endYear = parseInt(end[0])
-      this.endMonth = parseInt(end[1]) - 1
-      this.endDay = parseInt(end[2])
+      this.endYear = parseInt(end[0], 10)
+      this.endMonth = parseInt(end[1], 10) - 1
+      this.endDay = parseInt(end[2], 10)
 
       this.startTime = new Date(this.startYear, this.startMonth, this.startDay).getTime()
       this.endTime = new Date(this.endYear, this.endMonth, this.endDay).getTime()
@@ -835,16 +696,24 @@ export default {
         }
       }
     },
-    changeYearMonth() {
-      this.changeYearMonthMode = true
-    },
     dateFormat(year, month, day) {
-      let date = year + '-' +
-        ((month + 1).toString().length === 1 ? '0' + (month + 1) : month + 1) + '-' +
-        (day.toString().length === 1 ? '0' + day : day)
+      let date = `${year}-`
+
+      if (month + 1 < 10) {
+        date += `0${(month + 1)}-`
+      } else {
+        date += `${(month + 1)}-`
+      }
+
+      if (day < 10) {
+        date += `0${day}`
+      } else {
+        date += day.toString()
+      }
 
       if (this.noSeparator) {
         date = date.replace(/-/gi, '')
+        date = date.replace(/\./gi, '')
       }
 
       return date
@@ -894,7 +763,8 @@ export default {
       // 데이터 검증
       if (this.validate.length) {
         for (let i = 0; i < this.validate.length; i++) {
-          let result1 = true, result2 = true
+          let result1 = true
+          let result2 = true
 
           if (this.range) {
             result1 = this.validate[i].call(null, this.startSelectedDate)
@@ -920,6 +790,39 @@ export default {
     },
   }
 }
+
+Date.prototype.getDateFormat = function(format, days = 0) {
+  let date = this
+
+  if (days !== 0) {
+    const time = date.getTime()
+    date = new Date(time + (86400 * days * 1000))
+  }
+
+  let year = date.getYear()
+  let month = date.getMonth() + 1
+  let day = date.getDate()
+  let dYear = date.getFullYear()
+  let dMonth = month
+  let dDay = day
+
+  if (month.toString().length === 1) {
+    dMonth = `0${month}`
+  }
+
+  if (day.toString().length === 1) {
+    dDay = `0${day}`
+  }
+
+  format = format.replace('Y', dYear)
+  format = format.replace('m', dMonth)
+  format = format.replace('d', dDay)
+  format = format.replace('y', year)
+  format = format.replace('n', month)
+  format = format.replace('j', day)
+
+  return format
+}
 </script>
 
 <style lang="scss" scoped>
@@ -933,10 +836,26 @@ export default {
   -ms-user-select: none;
   user-select: none;
 
+  &.error input[type=text] {
+    border: 2px solid #ff5252;
+  }
+
+  .description {
+    font-size: 12px !important;
+    font-weight: normal;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    border: 0 !important;
+    color: #ff5252;
+    text-align: left !important;
+
+    &.error {
+      animation: shaking 0.3s;
+    }
+  }
+
   .picker-popup {
     position: fixed;
-    width: 584px;
-    border: 1px solid #dadada;
     border-radius: 3px;
     box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
     background: #fff;
@@ -944,7 +863,7 @@ export default {
     line-height: 1;
 
     .search-date {
-      padding: 15px;
+      padding: 10px;
       border-bottom: 1px solid #dadada;
       text-align: left;
 
@@ -970,8 +889,8 @@ export default {
     }
 
     .start-end-text {
-      line-height: 49px;
-      font-size: 18px;
+      line-height: 30px;
+      font-size: 14px;
       font-weight: 700;
       text-align: center;
       border-bottom: 1px solid #eee;
@@ -987,33 +906,12 @@ export default {
 
       .calendar {
         display: inline-block;
-        width: 291px;
+        width: 240px;
         box-sizing: border-box;
         vertical-align: top;
 
         &.end_calendar {
           border-left: 1px solid #eee;
-        }
-      }
-
-      .select-month {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin: 15px auto;
-        width: 210px;
-        height: 30px;
-
-        span,
-        span em {
-          font-size: 14px;
-          display: inline-block;
-        }
-
-        button {
-          border: 0;
-          background: transparent;
-          font-size: 15px;
         }
       }
 
@@ -1107,7 +1005,7 @@ export default {
       }
 
       .btn-area {
-        padding: 15px;
+        padding: 10px;
         border-top: 1px solid #dadada;
         display: flex;
         flex-direction: row;
@@ -1145,7 +1043,7 @@ export default {
     }
 
     &.single {
-      width: 270px;
+      width: 230px;
 
       .picker-wrap .calendar {
         width: 210px;
@@ -1156,22 +1054,6 @@ export default {
       width: 100%;
 
       .picker-wrap {
-        .select-month {
-          width: 189px;
-
-          button {
-            width: 25px;
-
-            &.prev {
-              left: 25px;
-            }
-
-            &.next {
-              right: 25px;
-            }
-          }
-        }
-
         .calendar {
           width: 189px;
         }
@@ -1226,58 +1108,78 @@ export default {
     min-height: 210px !important;
     margin-bottom: 10px;
   }
+}
 
-  .picker-scale-enter,
-  .picker-scale-leave-to {
+.ml-1 {
+  margin-left: 3px;
+}
+
+/* transitions */
+.picker-scale-enter,
+.picker-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.5);
+}
+.picker-scale-enter-active,
+.picker-scale-leave-active {
+  transition: all 0.1s ease-out;
+}
+
+.trans-left-enter {
+  opacity: 0;
+  transform: translateX(20px);
+}
+.trans-left-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.trans-left-enter-active,
+.trans-left-leave-active {
+  transition: all 0.1s ease-out;
+}
+
+.trans-right-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.trans-right-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+.trans-right-enter-active,
+.trans-right-leave-active {
+  transition: all 0.1s ease-out;
+}
+
+.trans-down-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.trans-down-leave-to {
     opacity: 0;
-    transform: scale(0.5);
-  }
-  .picker-scale-enter-active,
-  .picker-scale-leave-active {
+    transform: translateY(20px);
+}
+.trans-down-enter-active,
+.trans-down-leave-active {
     transition: all 0.1s ease-out;
-  }
+}
 
-  .trans-left-enter {
-    opacity: 0;
-    transform: translateX(20px);
+/* error message shaking */
+@keyframes shaking {
+  0% {
+    transform: translateX(10px);
   }
-  .trans-left-leave-to {
-      opacity: 0;
-      transform: translateX(-20px);
+  25% {
+    transform: translateX(0);
   }
-  .trans-left-enter-active,
-  .trans-left-leave-active {
-      transition: all 0.1s ease-out;
+  50% {
+    transform: translateX(10px);
   }
-
-  .trans-right-enter {
-      opacity: 0;
-      transform: translateX(-20px);
+  75% {
+    transform: translateX(0);
   }
-  .trans-right-leave-to {
-      opacity: 0;
-      transform: translateX(20px);
-  }
-  .trans-right-enter-active,
-  .trans-right-leave-active {
-      transition: all 0.1s ease-out;
-  }
-
-  .trans-down-enter {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  .trans-down-leave-to {
-      opacity: 0;
-      transform: translateY(20px);
-  }
-  .trans-down-enter-active,
-  .trans-down-leave-active {
-      transition: all 0.1s ease-out;
-  }
-
-  .ml-1 {
-    margin-left: 3px;
+  100% {
+    transform: translateX(10px);
   }
 }
 </style>

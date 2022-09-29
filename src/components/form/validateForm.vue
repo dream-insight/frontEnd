@@ -52,9 +52,8 @@ export default {
     },
     componentCheck(el, flag) {
       const checkList = [
-        'inputField', 'numberFormat',
-        'selectBox', 'switchButton',
-        'checkButton', 'validateWrap'
+        'inputField', 'numberFormat', 'selectBox', 'switchButton',
+        'checkButton', 'datePicker', 'validateWrap'
       ]
 
       // 컴포넌트인지 체크 후 필요한 처리를 한다.

@@ -12,7 +12,6 @@ const routes = [
   { path: '/tooltip', name: 'tooltip', component: () => import('@/views/tooltip') },
   { path: '/form', name: 'form', component: () => import('@/views/form') },
   { path: '/listTable', name: 'listTable', component: () => import('@/views/listTable') },
-  { path: '/datePicker', name: 'datePicker', component: () => import('@/views/datePicker') },
 ]
 
 const router = new VueRouter({

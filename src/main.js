@@ -54,6 +54,7 @@ import inputField from '@/components/form/inputField'
 import numberFormat from '@/components/form/numberFormat'
 import selectBox from '@/components/form/selectBox'
 import switchButton from '@/components/form/switchButton'
+import datePicker from '@/components/form/datePicker'
 import validateForm from '@/components/form/validateForm'
 import validateWrap from '@/components/form/validateWrap'
 
@@ -62,13 +63,9 @@ Vue.component('input-field', inputField)
 Vue.component('number-format', numberFormat)
 Vue.component('select-box', selectBox)
 Vue.component('switch-button', switchButton)
+Vue.component('date-picker', datePicker)
 Vue.component('validate-form', validateForm)
 Vue.component('validate-wrap', validateWrap)
-
-
-import datePicker from '@/components/datePicker'
-
-Vue.component('date-picker', datePicker)
 
 import listTable from '@/components/table'
 
