@@ -374,7 +374,7 @@ export default {
 |-------|---- |---------|---------|-------------|
 | value | String, Array | <code>none</code> | false | v-model, option range 설정시 ['', ''] 설정 필요 |
 | validate | Array | <code>[Function]</code> | false | 폼 유효성 검사에 필요한 callback 함수를 배열에 나열 입력 |
-| placeholder | String, Array | <code>none</code> | false | 입력 필드에 placeholder 표시, option range 설정시 [시작일, 종료일] 형태로 입력 |
+| placeholder | String, Array | <code>none</code> | false | 입력 필드에 placeholder 표시<br>option range 설정시 [시작일, 종료일] 형태로 입력 |
 | range | Boolean | <code>false</code> | false | 시작일과 종료일을 선택할 수 있도록 설정 |
 | separator | String | <code>-</code> | false | 년, 월, 일 사이 구분 문자 설정 |
 | minYear | Number | <code>1900</code> | false | 선택 가능한 최소 년도 설정 |
