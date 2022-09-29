@@ -28,6 +28,7 @@
 16. [이벤트 버스](#16-이벤트-버스)
 17. [상태 관리자 Vuex](#17-상태-관리자-Vuex)
 18. [라우터 Router](#18-라우터-Router)
+19. [env 파일 활용](#19-env-파일-활용)
 
 * [Vue2.x Component & Plugin 모음](https://github.com/dream-insight/frontEnd/tree/main/src)
 
@@ -1977,11 +1978,49 @@ const routes = [
 
 ---
 
-## 19. .env 활용
+## 19. env 파일 활용
+### 19.1. 개발, 테스트, 서비스 구분
+* 루트 폴더에 아래와 같이 파일을 배치 합니다.
+```
+.env
+.env.dev
+.env.test
+.env.prod
+```
+* package.json 파일 script 명령어에 --development 나 --production을 직접 주입방식은 사용하지 않습니다.
+* 명령어 별로 해당 파일을 직접 복사해 넣는 방식으로 설정합니다.
+```json
+{
+  "script": {
+    "serve": "cp ./.env.dev ./.env && vue-cli-service serve",
+    "build:dev": "cp ./.env.dev ./.env && vue-cli-service build",
+    "build:test": "cp ./.env.test ./.env && vue-cli-service build",
+    "build:prod": "cp ./.env.prod ./.env && vue-cli-service build",
+  }
+}
+```
+
+### 19.2. 사용 방법
+* 각종 환경 변수를 선언 하여 사용합니다.
+* 환경 변수 선언시에 VUE_APP_* 형태로 작성하여야 합니다.
+```
+VUE_APP_VERSION = 1.2.1
+VUE_APP_OAUTH_KEY = cdf55f3392d0f1be3dd12a9673469938ada5c2a
+VUE_APP_API_URL = https://dev.programrush.co.kr/api
+```
+* vue에서 호출하여 사용시에는 <code>process.env</code>로 접근 가능합니다.
+```javascript
+const { VUE_APP_VERSION, VUE_APP_API_URL } = process.env
+```
+
+### 19.3. 주의 사항
+* 로컬 개발 진행 시에 .env 파일을 수정 하였다면 반듯이 로컬 서버를 재시작 해주세요.
+* 배포시에는 빌드 당시 설정된 내용이 적용 됩니다. 설정이 변경된 내용은 꼭 다시 빌드 후 배포하세요.
+
 
 :arrow_up: [목차](#목차)
 
 ---
 
-* 초안 작성 2022.09.26일 완료 (작성자: 김종윤 수석 매니저)
-*
+* 초안 작성 2022.09.26 (작성자: 김종윤 수석 매니저)
+* 항목 19 추가 작성 2022.09.29 (수정자: 김종윤 수석 매니저)

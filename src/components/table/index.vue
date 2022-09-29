@@ -1,5 +1,5 @@
 <template>
-  <table :class="['table_basic']">
+  <table class="list-table">
     <thead v-if="multiHeader === 0">
       <tr>
         <th width="50" v-if="checkAll">
@@ -12,15 +12,17 @@
           <div
             :class="['columns', item.align]"
             @click.prevent="setSort(item.target, item.order)"
-            v-if="item.sort && dataList.length > 0">
-            <div class="sort-cell-text" v-html="item.text.nl2br()"></div>
+            v-if="item.sort && dataList.length">
+            <div class="sort-cell-text">{{ item.text }}</div>
             <span :class="['sorting rotate', item.order]">
               <transition appear name="icon-scale">
-                <span class="order-icon" v-if="item.order">↓</span>
+                <span class="order-icon" v-if="item.order">
+                  <font-awesome-icon icon="fas fa-drrow-down" />
+                </span>
               </transition>
             </span>
           </div>
-          <span v-html="item.text.nl2br()" v-else></span>
+          <span v-else>{{ item.text }}</span>
         </th>
       </tr>
     </thead>
@@ -38,15 +40,17 @@
           <div
             :class="['hand flex-row', `justify-${item.align}`]"
             @click="setSort(item.target, item.order)"
-            v-if="item.sort && dataList.length > 0">
-            <div style="margin-right: 5px;" v-html="item.text.nl2br()"></div>
+            v-if="item.sort && dataList.length">
+            <div style="margin-right: 5px;">{{ item.text }}</div>
             <span :class="['sorting rotate', item.order]">
               <transition appear name="icon-scale">
-                <span class="order-icon" v-if="item.order">↓</span>
+                <span class="order-icon" v-if="item.order">
+                  <font-awesome-icon icon="fas fa-drrow-down" />
+                </span>
               </transition>
             </span>
           </div>
-          <span v-html="item.text.nl2br()" v-else></span>
+          <span v-else>{{ item.text }}</span>
         </th>
       </tr>
     </thead>
@@ -64,7 +68,7 @@
     <tbody v-else>
       <tr>
         <td class="no-data" :colspan="colspan">
-          <div>{{noDataText}}</div>
+          <div>{{ noDataText }}</div>
         </td>
       </tr>
     </tbody>
@@ -78,7 +82,7 @@
             :width="item.width"
             :key="`foot${i}`"
             v-if="item.tag == 'th'">
-            {{item.value}}
+            {{ item.value }}
           </th>
           <td
             :colspan="item.colspan"
@@ -86,7 +90,7 @@
             :width="item.width"
             :key="`foot-${i}`"
             v-else>
-            <b>{{item.value}}</b>
+            <b>{{ item.value }}</b>
           </td>
         </template>
       </tr>
@@ -98,14 +102,15 @@
 </template>
 
 <script>
-/*
-  해당 컴포넌트는 정렬기능을 활성화 시킨 상태에서
-  라인당 추가되는 하위 데이터에 대한 변화를 감지 하지 못합니다.
+/**
+ * 해당 컴포넌트는 정렬기능을 활성화 시킨 상태에서
+ * 라인당 추가되는 하위 데이터에 대한 변화를 감지 하지 못합니다.
 */
 export default {
   name: 'listTable',
   props: {
-    header: {                       // 목록 최상단 라벨링 Array:[{text: string, width: int, sort: boolean, target: string(sort target)}] *
+    // 목록 최상단 라벨링 Array:[{text: String, width: Number, sort: Boolean, target: String(sort target)}] *
+    header: {
       type: Array,
       default: () => []
     },
@@ -113,12 +118,15 @@ export default {
       type: Array,
       default: () => []
     },
-    items: {                        // 테이블 목록 Array:[] *
+    // 테이블 목록 Array:[] *
+    items: {
       type: Array,
       required: true
     },
-    emptyText: String,              // 목록이 없을 경우 표시할 텍스트 String:''
-    noHoverBg: {                    // 설정시 라인 색상이 적용 되지 않음
+    // 목록이 없을 경우 표시할 텍스트 String:''
+    emptyText: String,
+    // 설정시 라인 색상이 적용 되지 않음
+    noHoverBg: {
       type: Boolean,
       default: false
     },
@@ -126,7 +134,8 @@ export default {
       type: String,
       default: ''
     },
-    checkAll: {                     // 리스트 체크 여부 Boolean:false
+    // 리스트 체크 여부 Boolean:false
+    checkAll: {
       type: Boolean,
       default: false
     },
@@ -152,7 +161,7 @@ export default {
     },
     items(data) {
       if (this.target != '') {
-        this.dataList = this.copy(data)
+        this.dataList = { ...data }
         this.sorting()
       }
 
@@ -164,7 +173,7 @@ export default {
   created() {
     this.setHeader()
 
-    if (this.multiHeader > 0) {
+    if (this.multiHeader) {
       this.colspan = this.multiHeader + (this.checkAll ? 1 : 0)
     } else {
       this.colspan = this.header.length + (this.checkAll ? 1 : 0)
@@ -174,13 +183,13 @@ export default {
       this.noDataText = this.emptyText
     }
 
-    if (this.items.length > 0 && this.target != '') {
-      this.dataList = this.copy(this.items)
+    if (this.items.length && this.target !== '') {
+      this.dataList = { ...this.items }
     }
   },
   methods: {
     setHeader() {
-      if (this.header.length > 0) {
+      if (this.header.length) {
         // 정렬이 지정되어 있는 경우 해당 컬럼을 정렬해준다.
         if (this.multiHeader > 0) {
           this.header.forEach((head, i) => {
@@ -231,9 +240,9 @@ export default {
     setSort(target, order) {
       this.target = target
 
-      if (order == 'desc') {
+      if (order === 'desc') {
         this.order = 'asc'
-      } else if (order == 'asc') {
+      } else if (order === 'asc') {
         this.order = ''
       } else {
         this.order = 'desc'
@@ -242,32 +251,40 @@ export default {
       this.sorting()
     },
     sorting() {
-      if (this.target != '') {
+      if (this.target !== '') {
         if (this.order) {
           this.dataList.sort((a, b) => {
-            let condA = parseInt(a[this.target]),
-                condB = parseInt(b[this.target])
+            let condA = parseInt(a[this.target])
+            let condB = parseInt(b[this.target])
 
             if (this.order == 'asc') {
-              if (condA > condB) return 1
-              else if (condA == condB) return 0
-              else if (condA < condB) return -1
+              if (condA > condB) {
+                return 1
+              } else if (condA == condB) {
+                return 0
+              } else if (condA < condB) {
+                return -1
+              }
             } else {
-              if (condA > condB) return -1
-              else if (condA == condB) return 0
-              else if (condA < condB) return 1
+              if (condA > condB) {
+                return -1
+              } else if (condA == condB) {
+                return 0
+              } else if (condA < condB) {
+                return 1
+              }
             }
           })
         } else {
-          if (this.items.length > 0) {
-            this.dataList = this.copy(this.items)
+          if (this.items.length) {
+            this.dataList = { ...this.items }
           }
         }
 
         if (this.multiHeader > 0) {
           this.tableHeader.forEach(main => {
             main.forEach(item => {
-              if (item.target == this.target) {
+              if (item.target === this.target) {
                 item.order = this.order
               } else {
                 item.order = ''
@@ -276,7 +293,7 @@ export default {
           })
         } else {
           this.tableHeader.forEach(item => {
-            if (item.target == this.target) {
+            if (item.target === this.target) {
               item.order = this.order
             } else {
               item.order = ''
@@ -284,11 +301,12 @@ export default {
           })
         }
 
-        this.$emit('@sortChange', { data: this.copy(this.dataList), target: this.target, order: this.order })
+        this.$emit('@sortChange', {
+          data: { ...this.dataList },
+          target: this.target,
+          order: this.order
+        })
       }
-    },
-    copy(data) {
-      return JSON.parse(JSON.stringify(data))
     },
     showToolTip(item) {
       console.log(item)
@@ -297,20 +315,61 @@ export default {
 }
 </script>
 
-<style scoped>
-.columns {cursor: pointer; display: flex; flex-direction: row; align-items: center;}
-.columns.center {justify-content: center;}
-.columns.left {justify-content: flex-start;}
-.columns.right {justify-content: flex-end;}
-.sorting {
-  transition: all .2s; transform-origin: center; text-align: center;
-  font-size: 14px; width: 21px; height: 21px; color: #528ff2;
+<style lang="scss" scoped>
+.list-table {
+  .columns {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &.center {
+      justify-content: center;
+    }
+    &.left {
+      justify-content: flex-start;
+    }
+    &.right {
+      justify-content: flex-end;
+    }
+  }
+
+  .sorting {
+    transition: all .2s;
+    transform-origin: center;
+    text-align: center;
+    font-size: 14px;
+    width: 21px;
+    height: 21px;
+    color: #528ff2;
+  }
+  .sorting:hover {
+    color: rgba(82, 143, 242, 0.5);
+  }
+  .order-icon {
+    display: block;
+    line-height: 21px;
+    width: 21px;
+    font-size: 18px;
+    text-align: center;
+  }
+  .desc {
+    transform: rotate(360deg);
+  }
+  .asc {
+    transform: rotate(180deg);
+  }
+  .sort-cell-text {
+    margin-right: 5px;
+    position: relative;
+  }
+  .icon-scale-enter,
+  .icon-scale-leave-to {
+    transform: scale(0);
+  }
+  .icon-scale-enter-active,
+  .icon-scale-leave-active {
+    transition: transform .2s;
+  }
 }
-.order-icon {display: block; line-height: 21px; width: 21px; font-size: 18px; text-align: center;}
-.sorting:hover {color: rgba(82, 143, 242, 0.5);}
-.desc {transform: rotate(360deg);}
-.asc {transform: rotate(180deg);}
-.sort-cell-text {margin-right: 5px; position: relative;}
-.icon-scale-enter, .icon-scale-leave-to {transform: scale(0)}
-.icon-scale-enter-active, .icon-scale-leave-active {transition: transform .2s;}
 </style>

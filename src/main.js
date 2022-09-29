@@ -25,13 +25,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
   faExclamationTriangle, faInfoCircle, faBan, faCheckCircle,
   faAngleDoubleLeft, faAngleLeft, faAngleRight, faAngleDoubleRight,
-  faQuestionCircle, faExclamationCircle,
+  faQuestionCircle, faExclamationCircle, faArrowDown, faCalendarAlt
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
   faCheckCircle, faInfoCircle, faExclamationTriangle, faBan,
   faAngleDoubleLeft, faAngleLeft, faAngleRight, faAngleDoubleRight,
-  faQuestionCircle, faExclamationCircle,
+  faQuestionCircle, faExclamationCircle, faArrowDown, faCalendarAlt
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
@@ -65,6 +65,14 @@ Vue.component('switch-button', switchButton)
 Vue.component('validate-form', validateForm)
 Vue.component('validate-wrap', validateWrap)
 
+
+import datePicker from '@/components/datePicker'
+
+Vue.component('date-picker', datePicker)
+
+import listTable from '@/components/table'
+
+Vue.component('list-table', listTable)
 
 new Vue({
   router,

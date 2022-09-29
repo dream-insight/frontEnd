@@ -13,7 +13,7 @@
 ---
 
 ## 1. checkButton
-  * <code>\<input type="checkbox" /></code>, <code>\<input type="radio" /></code> 버튼을 표시해줍니다.
+  * <code>\<input type="checkbox" /></code>, <code>\<input type="radio" /></code> 버튼을 생성합니다.
 
 ### 1.1. 사용방법
 * <code>all</code> 옵션을 설정해 주면 빈 값의 '전체' 버튼을 자동 생성해줍니다.
