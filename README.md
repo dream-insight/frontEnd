@@ -377,7 +377,7 @@ const func = () => {
   ...
 }
 ```
-  > 함수 선언 방식과, 함수식으로 정의 하는 방식은 hoist 되는 방식이 다릅니다.
+  > 함수 선언 방식과, 함수식으로 정의 하는 방식은 hoisting 방식이 다릅니다.
 
 ```javascript
 // it's working
@@ -876,6 +876,51 @@ if (apple) {
 ```
   > 중첩 3항 연산은 길이가 짧다고 하여도, 가독성이 매우 떨어집니다. 이는 익숙하지 않은 사람에게 더욱더 그렇습니다.
 
+### 8.3. 너무 긴 연산문
+* 연산문 자체가 길이가 긴 경우 또는 조건문 자체가 긴 경우, 해당 결과를 변수에 담아 표현하세요.
+```javascript
+let people = 10
+let nowCovid = ['alpha', 'beta', 'gamma', 'delta', 'eta', 'lambda']
+let hours = 18
+let getVaccine = ['화이자', '모더나', '얀센', '노바백스', '스카이코비원']
+let isSafe = false
+
+// Bad
+const isSafe = getVaccine.indexOf('화이자') > -1 || getVaccine.indexOf('모더나') > -1 || getVaccine.indexOf('얀센') > -1 ? 'your safe' : 'go home'
+
+// Good
+const antibody = (getVaccine.indexOf('화이자') > -1 || getVaccine.indexOf('모더나') > -1 || getVaccine.indexOf('얀센')) > -1
+const isSafe =  antibody ? 'kill covid' : 'go home'
+
+// or
+const pfizer = getVaccine.indexOf('화이자') > -1
+const janssen = getVaccine.indexOf('얀센') > -1
+const moderna = getVaccine.indexOf('모더나') > -1
+
+const isSafe = (pfizer || janssen || moderna) ? 'kill covid' : 'go home'
+
+// Bad
+if (
+  (nowCovid.indexOf('delta') > -1 || nowCovide.indexOf('lambda') > -1) &&
+  (getVaccine.indexOf('화이자') > -1 || getVaccine.indexOf('모더나') > -1)) &&
+  people > 4 &&
+  hours > 16
+) {
+  isSafe = true
+}
+
+// Good
+const covid = nowCovid.indexOf('delta') > -1 || nowCovide.indexOf('lambda') > -1
+const vaccine = getVaccine.indexOf('화이자') > -1 || getVaccine.indexOf('모더나') > -1
+
+if (covid && people > 4 && hours > 16 && vaccine) {
+  isSafe = true
+}
+
+
+```
+
+
 :arrow_up: [목차](#목차)
 
 ---
@@ -1268,6 +1313,45 @@ const obj = { text: '', value: '' }
   ```
 
 :arrow_up: [목차](#목차)
+
+### 12.5. 메서드 체이닝
+* 길게 나열되는 메서드 체이닝은 가독성이 떨어지는 경우가 종종 있습니다.
+* 이러한 경우 내려쓰기와 들여쓰기로 정리해주세요.
+```javascript
+const obj = new classObject()
+
+// Bad
+obj.delay(10).setProperty({ text: 'text1', value: 1 }).send({ method: 'post', header: null }).then((result) => console.log(result))
+obj.
+  delay(10).
+  setProperty({ text: 'text1', value: 1 }).
+  send({ method: 'post', header: null }).
+  then((result) => {
+    console.log(result)
+  })
+
+
+// Good
+obj.delay(10)
+  .setProperty({ text: 'text1', value: 1 })
+  .send({ method: 'post', header: null })
+  .then(result => console.log(result))
+
+obj
+  .delay(10)
+  .setProperty({
+     text: 'text1',
+     value: 1
+  })
+  .send({
+    method: 'post',
+    header: null
+  })
+  .then(result => {
+    console.log(result)
+  })
+```
+> 메서드 체이닝 내려쓰기 시에는 필히 연결자(<code>.</code>)을 앞쪽으로 배치해주세요.
 
 ---
 
@@ -1873,8 +1957,9 @@ export default {
 
 ## 17. 상태 관리자 Vuex
 ### 17.1. 기능별 모듈 분리를 기본으로 합니다.
-  * 분류가 모호한 코드는 것들은 store/index.js에 나열하고 코멘트 처리 해줍니다.
+  * 분류가 모호한 코드는 store/index.js에 나열하고 코멘트 처리 해줍니다.
 ```javascript
+// index.js
 import session from '@/store/modules/session.js'
 import board from '@/store/modules/board.js'
 
@@ -1892,7 +1977,7 @@ const store = new Vuex.Store({
 
 ### 17.2. mutations, actions, getters
   * 기본 명명 규칙을 준수하여 작성해주세요.
-  * mutations -> mut, actions -> set, getters -> is, get 으로 명명합니다.
+  * mutations -> mut, actions -> set, getters -> is(Boolean), get 으로 명명합니다.
 ```javascript
 const session = {
   namespaced: true,
@@ -1944,28 +2029,39 @@ const session = {
 ## 18. 라우터 Router
 * 이름은 경로와 일치 시키되 앞쪽 <code>/</code>는 사용하지 않습니다.
 * 별도의 import로 파일을 불러 오지 않고 <code>component</code> 옵션에 바로 <code>() => import()</code> 방식으로 매칭 시켜 줍니다.
-* meta 옵션은 필요한 부분에만 작성하여 주고, 그외에는 설정하지 않습니다.
+* <code>meta</code> 옵션은 필요한 부분에만 작성하여 주고, 그외에는 설정하지 않습니다.
 ```javascript
 // Bad
-import petList from '@/views/pet/list'
+import boardList from '@/views/board/list'
+import boardDetail from '@/views/board/detail'
+import boardComment from '@/views/board/comment'
+import boardWrite from '@/views/board/write'
 
 const routes = [
   { path: '/', name: 'index', component: () => import('@/views/index') },
 
   // Bad
-  { path: '/pet/list', name: 'pet/list', component: petList },
+  {
+    path: '/board/list', name: 'board/list', component: boardList, children: [
+      { path: '/board/detail', name: 'board/detail', component: boardDetail },
+      { path: '/board/comment', name: 'board/comment', component: boardComment },
+    ]
+  },
+  { path:  '/board/write', name: 'board/write', component: boardWrite },
 
   // Good
   {
-    path: '/board/list', name: 'board/list', component: () => import('...'), children: [
-      { path: '/board/detail', name: 'board/detail', component: () => import('...') },
-      { path: '/board/comment', name: 'board/comment', component: () => import('...') },
+    path: '/board/list',          name: 'board/list',       component: () => import('...'),
+    children: [
+      { path: '/board/detail',    name: 'board/detail',     component: () => import('...') },
+      { path: '/board/comment',   name: 'board/comment',    component: () => import('...') },
     ]
   },
-  { path:  '/board/write', name: 'board/write', component: () => import('...') },
+  { path: '/board/write',         name: 'board/write',      component: () => import('...') },
 
   {
-    path:  '/member/detail', name: 'member/detail', component: () => import('...'), meta: { pullScreen: true }, children: [
+    path: '/member/detail',       name: 'member/detail',    component: () => import('...'),
+    meta: { pullScreen: true }, children: [
       { path: '/member/detail/password', name: 'member/detail/password', component: () => import('...') },
     ]
   },

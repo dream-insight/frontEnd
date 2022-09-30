@@ -269,7 +269,10 @@ export default {
       endMonth: 11,
       endDay: 1,
 
-      opt: { year: [], month: [] },
+      opt: {
+        year: [],
+        month: []
+      },
 
       startSelectedDate: '',
       endSelectedDate: '',
@@ -374,8 +377,11 @@ export default {
     document.addEventListener('click', evt => {
       if (this.isShow) {
         const classList = evt.target.classList.value
+        const indexOf1 = classList.indexOf('current')
+        const indexOf2 = classList.indexOf('today')
+        const indexOf3 = classList.indexOf('date-range')
 
-        if (classList.indexOf('current') === -1 && classList.indexOf('today') === -1 && classList.indexOf('date-range') === -1) {
+        if (indexOf1 === -1 && indexOf2 === -1 && indexOf3 === -1) {
           this.isShow = this.$el.contains(evt.target)
         }
       }
