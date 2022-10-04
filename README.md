@@ -107,13 +107,11 @@ export default {
 ## 2. 명명 규칙
 
 ### 2.1. 공통
-* 모든 요소(파일, 변수 등등)에 대한 이름은 영문 + 카멜케이스로 작성합니다.
+* 영문 카멜케이스로 작성합니다.
 * 이름 가장 앞자리를 숫자로 선언하면 안됩니다.
   > 파일, 폴더명 역시 동일하게 취급합니다.
-
 * 필히 한 단어 이상의 유의미한 단어로 조합하고, 의미가 불분명한 줄임 단어를 사용하지 않습니다.
   > 개발시 많이 사용되는 btn, chk, bln, lbl 등등의 줄임단어는 사용하여도 무방합니다.
-
 * javascript의 예약어를 변수나 함수, class명으로 사용 하지 않습니다.
   > 단, plugin, component를 참조하여 호출 하는 경우는 허용 합니다.
 ```vue
@@ -154,7 +152,7 @@ export default {
 </script>
 ```
 
-### 2.2. 파일명 (컴포넌트 명)
+### 2.2. 파일명
 * 기능에 대한 정의를 기술하듯 작성합니다.
 ```javascript
 /* 카테고리를 3단으로 선택할 수 있는 컴포넌트 */
@@ -201,7 +199,7 @@ import codeLib from './module'
 ## 3. 변수 선언과 자료형
 
 ### 3.1. 기본 형태의 Vue v2.x은 Type Script를 사용하기 어려운 관계로 필히 변수 선언시 타입에 맞게 정의 합니다.
-```vue
+```javascript
 export default {
   data: () => ({
     name: '',       // String -> 공백
@@ -419,14 +417,14 @@ export default {
     getUserName() {
       // return
       let text = '당신은 ' + this.$store.getters.getFamilyName +
-                '씨이고, 이름은 ' + this.store.getters.getYourName + '입니다'
+                '씨이고, 이름은 ' + this.$store.getters.getYourName + '입니다'
 
       return text
     },
     setUserName() {
       // void
       this.userName = '당신은 ' + this.$store.getters.getFamilyName +
-                      '씨이고, 이름은 ' + this.store.getters.getYourName + '입니다'
+                      '씨이고, 이름은 ' + this.$store.getters.getYourName + '입니다'
     }
   }
 }
@@ -652,9 +650,8 @@ const getText = (target) => obj[target]
 
 ```
 
-### 6.4. data에 선언된 오브젝트
-* data에 선언된 변수(properties)들은 우리에게 매운 편리한 기능을 재공 합니다.
-* 다만 그 편리함이 우리를 불편하게도 합니다. 아래의 예를 보겠습니다.
+### 6.4. 오브젝트 복사
+* 오브젝트를 따로 복사하여 사용할 때에는 아래의 사항에 유의 하세요.
 ```vue
 <script>
 export default {
