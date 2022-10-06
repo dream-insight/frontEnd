@@ -3,7 +3,7 @@
     <div :class="['selector-box', { month: max === 0 }]">
       <div class="selector-box-wrap">
         <div class="arrow"></div>
-        <ul>
+        <ul ref="ul">
           <li
             :class="{ active: num == date }"
             @click="updateValue(num)"
@@ -30,7 +30,7 @@ export default {
       type: Number,
       default: 0
     },
-    isHide: {
+    isShow: {
       type: Boolean
     }
   },
@@ -40,6 +40,15 @@ export default {
         for (let i = this.max; i >= 1900; i--) {
           this.items.push(i)
         }
+      }
+    },
+    isShow(v) {
+      if (v) {
+        setTimeout(() => {
+          const li = this.$refs.ul.$el.querySelector('li.active')
+          const top = li.offsetTop - li.offsetHeight
+          this.$refs.ul.$el.scrollTop = top
+        }, 100)
       }
     }
   },
@@ -54,18 +63,11 @@ export default {
       for (let i = this.max; i >= 1900; i--) {
         this.items.push(i)
       }
-    } else {
-      for (let i = 0; i < 12; i++) {
-        this.items.push(i)
-      }
     }
 
-
-    // setTimeout(() => {
-    //   const el = this.$el.querySelector('li.active')
-    //   console.log(el)
-    //   el.scrollIntoView({ block: 'center', inline: 'center' })
-    // }, 100)
+    for (let i = 0; i < 12; i++) {
+      this.items.push(i)
+    }
   },
   methods: {
     updateValue(v) {

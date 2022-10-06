@@ -475,14 +475,16 @@ export default {
           }
 
           // 시작 날짜와 끝 날짜 사이에 색상 표시
-          if (this.range && this.startSelectedDate !== '' && this.endSelectedDate !== '') {
-            let time = new Date(this[flag + 'Year'], this[flag + 'Month'], day).getTime()
+          if (objData.type !== 'today') {
+            if (this.range && this.startSelectedDate !== '' && this.endSelectedDate !== '') {
+              let time = new Date(this[flag + 'Year'], this[flag + 'Month'], day).getTime()
 
-            if (time >= this.startTime && time <= this.endTime) {
-              if (flag === 'start' && time > this.startTime) {
-                objData.type = 'date-range'
-              } else if (flag === 'end' && time < this.endTime) {
-                objData.type = 'date-range'
+              if (time >= this.startTime && time <= this.endTime) {
+                if (flag === 'start' && time > this.startTime) {
+                  objData.type = 'date-range'
+                } else if (flag === 'end' && time < this.endTime) {
+                  objData.type = 'date-range'
+                }
               }
             }
           }
@@ -587,9 +589,9 @@ export default {
           date = new Date(date.getFullYear(), date.getMonth(), 0)
         }
 
-        var year = date.getFullYear()
-        var month = date.getMonth() + 1
-        var day = date.getDate()
+        let year = date.getFullYear()
+        let month = date.getMonth() + 1
+        let day = date.getDate()
 
         if (month.toString().length === 1) {
           month = '0' + month.toString()

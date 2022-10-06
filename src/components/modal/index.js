@@ -51,8 +51,10 @@ export default {
           e.icon = opt.icon
         }
 
-        if (parseInt(opt.width, 10) > 0) {
-          e.width = parseInt(opt.width, 10)
+        if (opt.width !== undefined) {
+          if (!isNaN(parseInt(opt.width, 10))) {
+            e.width = parseInt(opt.width, 10)
+          }
         }
 
         if (typeof opt.okay == 'function') {

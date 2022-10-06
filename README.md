@@ -1133,9 +1133,9 @@ for (let i = 0; i < data.length; i++) {
 * 이러한 문제를 해결하기 위해 <code>Recursion Function</code>을(재귀함수) 사용하기 권합니다.
 ```javascript
 function makeDOM(data = {}) {
-  if (Object.keys(data).length) {
-    let doms = []
+  let doms = []
 
+  if (Object.keys(data).length) {
     Object.entries(data).forEach(([, item]) => {
       if (item.sub !== undefined) {
         let tag = `<div><span>${item.text}</span> ${makeMenu(item.sub).join('')}</div>`
@@ -1143,15 +1143,17 @@ function makeDOM(data = {}) {
       } else {
         doms.push(`<div><span>${item.text}</span></div>`)
       }
-
-      return doms
     })
   }
+
+  return doms
 }
 
 const tags = makeDOM(data)
 ```
 * 위와 같이 코드의 가독성이 좋아지고, 무엇보다 무한루프 발생 확율도 매우 낮습니다.
+> 좀더 정확히 말하자면 재귀함수로 인해 스택오버플로우(Stack Overflow)가 발생합니다.<br>
+이 문제애 대해서는 블로그를 참조 해주세요. [블로그]
 
 :arrow_up: [목차](#목차)
 
@@ -1184,7 +1186,7 @@ const tags = makeDOM(data)
   }
 
   ```
-  > 이것은 webpack을 통한 vuejs 개발시에만 해당 됩니다. 혹여, 순수 js를 작성할 상황이 생긴다면 세미콜론을 사용해주세요.
+  > 이것은 webpack을 통한 개발시에만 해당 됩니다. 혹여, 순수 js를 작성할 상황이 생긴다면 세미콜론을 사용해주세요.
 
 :arrow_up: [목차](#목차)
 
@@ -1642,7 +1644,7 @@ export default {
 ## 15. 컴포넌트 SFC
 
 ### 15.1. 컴포넌트 명명
-* 컴포넌트 import 시에는 카멜캐이스로, template 배치시에 케밥캐이스로 구분 합니다.
+* 컴포넌트 import 시에는 카멜캐이스(Camel-Case)로, template 배치시에 케밥캐이스(Kabab-Case)로 구분 합니다.
 ```vue
 <template>
   <div>

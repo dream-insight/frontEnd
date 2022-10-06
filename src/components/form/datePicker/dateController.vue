@@ -15,6 +15,7 @@
         <selector
           :max="maxYear"
           :date="selectedYear"
+          :is-show="showYearSelector"
           @selected="setYearMonth('year', $event)"
           v-show="showYearSelector"
         />
@@ -24,6 +25,7 @@
 
         <selector
           :date="selectedMonth"
+          :is-show="showMonthSelector"
           @selected="setYearMonth('month', $event)"
           v-show="showMonthSelector"
         />
