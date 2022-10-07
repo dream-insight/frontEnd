@@ -3,53 +3,69 @@
 # 1. 사용방법
 ```javascript
 // main.js
-import tooltip from '@/components/tooltip'
+import ListTable from '@/components/table'
 
-Vue.component('tooltip', tooltip)
+Vue.component('ListTable', ListTable)
 ```
 
 ```vue
 <template>
-  <div class="wrap">
-    <p>
-      <tooltip top message="위에 나오는 메시지" />
-    </p>
-    <p>
-      <tooltip right message="오른쪽에 나오는 메시지" />
-    </p>
-    <p>
-      <tooltip left width="200" message="왼쪽에 나오는 메시지">
-        slot 활용가능
-        <font-awesome-icon icon="fas fa-question-circle" />
-      </tooltip>
-    </p>
-    <p>
-      <tooltip :message="message">
-        <font-awesome-icon icon="fas fa-question-circle" />
-        slot 활용가능
-      </tooltip>
-    </p>
+  <div>
+    <list-table :header="header" :items="items">
+      <template v-slot:items="{ props }">
+        <tr>
+          <td class="center">{{ props.no }}</td>
+          <td>{{ props.title }}</td>
+          <td class="right">{{ props.number }}</td>
+        </tr>
+      </template>
+    </list-table>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'tooltipPrev',
+  name: 'listTablePrev',
   data() {
     return {
-      message: [
-        '아래에서 나오는 메시지',
-        '매시지를 목록으로 전달 가능'
-      ]
+      header: [
+        { text: '번호', width: '100' },
+        { text: '제목', width: '' },
+        { text: '수치', width: '' },
+      ],
+      items: [],
+    }
+  },
+  created() {
+    for (let i = 0; i < 20; i++) {
+      this.items.push({
+        no: i + 1,
+        title: `테이블 목록 - ${i + 1}`,
+        number: Math.floor(Math.random() * 10000000)
+      })
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.wrap {
-  padding: 200px;
-  text-align: center;
+<style lang="scss">
+table {
+  width: 100%;
+  border: 1px solid #444444;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid #444444;
+    padding: 10px;
+  }
+
+  .right {
+    text-align: right
+  }
+  .center {
+    text-align: center;
+  }
 }
 </style>
 ```
@@ -64,25 +80,5 @@ export default {
 | bottom | Boolean | <code>true</code> | false | 메시지를 아랫쪽에 표시 |
 | width | Number | <code>300</code> | false | 메시지를 box의 최대 넓이(고정) |
 
-## 3. 그 외
-### Fontawsome 과 함께 사용하여야 icon 표시 가능
-
-```
-npm install @fortawesome/fontawesome-svg-core
-npm install @fortawesome/free-solid-svg-icons
-npm install @fortawesome/vue-fontawesome
-```
-
-```javascript
-// main.js
-// fontawesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-
-library.add(faQuestionCircle)
-
-Vue.component('font-awesome-icon', FontAwesomeIcon)
-```
 
 :arrow_left: [컴포넌트 목록으로이동](https://github.com/dream-insight/frontEnd/tree/main/src)

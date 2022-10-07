@@ -777,7 +777,7 @@ if (apple === banana) {
   ...
 }
 ```
-* 숫자형을 비교 하기 위해서는 해당 값을 필히 Type Casting(Number, parseInt, parseFloat) 후 비교 해주세요.
+* 숫자형을 비교 하기 위해서는 해당 변수를 필히 Type Casting(Number, parseInt, parseFloat) 후 비교 해주세요.
 > 비교 대상의 변수의 자료형을 알 수 없는 경우, 또는 API를 통해 받은 값
 * 숫자형은 0 이외의 값을 모두 <code>true</code>로 간주 됩니다.
 ```javascript
@@ -1251,7 +1251,6 @@ for (let i = 0; i < num; i++) {
   }
 }
 
-// Bad
 const test = () => num
 ```
 
@@ -1429,8 +1428,8 @@ export default {
       * 그렇지 않을 경우 편의점에 가서 우유를 삽니다.
       * 만약 편의 점도 닫혀 있다면 집으로 돌아 옵니다.
       *
-      * @param {Boolean} isOpen
-      * @return {Number} 구매한 총 수량을 반환
+      * @param { Boolean } isOpen
+      * @return { Number } 구매한 총 수량을 반환
       */
     goMart(isOpen) {
       // ...

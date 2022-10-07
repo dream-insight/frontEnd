@@ -88,7 +88,7 @@ export default {
 | Name | Type | Default | Require | Description |
 |-------|---- |---------|---------|-------------|
 | value | Any | <code>none</code> | false | v-model |
-| type | String | <code>checkbox, radio</code> | false | checkbox 또는 radio 선택 |
+| type | String | <code>checkbox</code> | false | checkbox 또는 radio 선택 |
 | name | String | <code>''</code> | *true* | input name 애드립뷰트 값을 설정 |
 | items | Array | <code>[Object]</code> | *true* | 항목을 만들 배열 데이터 <br> [{ text: '', value: '' }] |
 | all | Boolean | <code>false</code> | false | '전체' 항목을 추가 해주는 옵션 |

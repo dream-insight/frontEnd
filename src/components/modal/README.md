@@ -14,7 +14,7 @@ const options = {
 Vue.use(modal, options)
 ```
 
-```javascript
+```vue
 <template>
   <div>
     <p>{{ message }}</p>
@@ -41,6 +41,8 @@ export default {
             this.message = 'okay button click!'
           }
         })
+        // only message
+        // this.$mdoal.alert('message...')
       } else {
         this.$modal.confirm({
           title: '이것은 confirm 모달입니다.',

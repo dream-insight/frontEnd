@@ -64,7 +64,12 @@ export default {
 | bottom | Boolean | <code>true</code> | false | 메시지를 아랫쪽에 표시 |
 | width | Number | <code>300</code> | false | 메시지를 box의 최대 넓이(고정) |
 
-## 3. 그 외
+# 3. Slots
+### Default
+* tooltip 컴포넌트로 객체를 랩핑하게 되면, 마우스 오버 이벤트 대상이 랩핑된 객체로 변경됩니다.
+
+
+## 4. 그 외
 ### Fontawsome 과 함께 사용하여야 icon 표시 가능
 
 ```
