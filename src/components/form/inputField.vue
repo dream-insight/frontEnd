@@ -13,6 +13,7 @@
       :readonly="readonly"
       :tabindex="tabIndex ? tabIndex : false"
       :disabled="disabled"
+      @blur="blurValidateCheck"
       v-on="eventListeners"
       v-if="multiline">
     </textarea>
@@ -29,6 +30,7 @@
       :disabled="disabled"
       :readonly="readonly"
       :maxlength="maxLength ? maxLength : false"
+      @blur="blurValidateCheck"
       v-on="eventListeners"
       v-else />
 
@@ -174,9 +176,9 @@ export default {
         return this.width.toString().indexOf('%') >= 0
           ? this.width
           : this.width + 'px'
-      } else {
-        return false
       }
+
+      return false
     }
   },
   created() {
@@ -270,22 +272,29 @@ export default {
 
       return { pattern, message }
     },
+    blurValidateCheck() {
+      if (this.blurValidate) {
+        this.check()
+      }
+    },
     check() {
       // 임의로 지정된 에러가 없는 경우
       if (this.errorMessage === '') {
-        // pattern check
-        if (this.pattern) {
-          const check = this.getPattern()
+        if (this.value !== '') {
+          // pattern check
+          if (this.pattern) {
+            const check = this.getPattern()
 
-          if (check.pattern.test(this.value)) {
-            this.message = ''
-          } else {
-            this.message = check.message
-            this.isValidate = false
-            this.checkPass = false
-            this.errorTransition = true
+            if (check.pattern.test(this.value)) {
+              this.message = ''
+            } else {
+              this.message = check.message
+              this.isValidate = false
+              this.checkPass = false
+              this.errorTransition = true
 
-            return false
+              return false
+            }
           }
         }
 
