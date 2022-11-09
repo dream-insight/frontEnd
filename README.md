@@ -360,11 +360,6 @@ export default {
 
 ### 4.2. 함수선언과 함수식을 구분하여 사용하세요.
 ```javascript
-// Bad (함수식)
-const func = function() {
-  ...
-}
-
 // Good (함수 선언)
 function func() {
   ...
@@ -374,29 +369,12 @@ function func() {
 const func = () => {
   ...
 }
-```
-  > 함수 선언 방식과, 함수식으로 정의 하는 방식은 hoisting 방식이 다릅니다.
 
-```javascript
-// it's working
-getCodeName('tag')
-
-function getCodeName(key) {
-  return code[key]
-}
-
-// error
-getCodeString('tag')
-
-const getCodeString = (key) => {
-  return code[key]
-}
-
-const getCodeString = function(key) {
-  return code[key]
+// Bad (함수식에 일반 함수를 사용하지 않도록 합니다)
+const func = function() {
+  ...
 }
 ```
-> 우리가 변수를 사용하기 전에 먼저 선언해주는 것과 같습니다. 함수 선언 방식은 변수를 선언하는 것과 동일하게 여겨집니다.
 
 ### 4.3. 함수를 명확히 구분하여 사용하세요. (void, return)
 * 대부분의 언어에서는 함수에 대해 명확히 정의 하기를 요구합니다.
@@ -580,7 +558,7 @@ const okay2 = ary.map((num) => {
 // Good
 const good = ary.map(num => num + 5)
 
-// Bad
+// Not Good
 const bad = ary.map((num) => {
   return num + 5
 })
@@ -2145,3 +2123,4 @@ const { VUE_APP_VERSION, VUE_APP_API_URL } = process.env
 * 항목 19 추가 작성 2022.09.29 (수정자: 김종윤 수석 매니저)
 * 항목 8, 12 추가 작성 2022.09.30 (수정자: 김종윤 수석 매니저)
 * 항목 6.5 추가작성 2022.10.18 (작성자: 김종윤 수석 매니저)
+* 항목 4 일부 내용 삭제 (hoist 관련) 2022.11.09 (작성자: 김종윤 수석 매니저)
