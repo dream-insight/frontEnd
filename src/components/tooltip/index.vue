@@ -3,7 +3,7 @@
     <slot v-if="showIcon"></slot>
     <font-awesome-icon class="icon" icon="fas fa-question-circle" v-else />
 
-    <transition :name="transitionName">
+    <transition name="tooltip">
       <div
         :class="['message-box', position]"
         :style="[{width: `${width}px`}, addStyle]"
@@ -57,12 +57,7 @@ export default {
   data() {
     return {
       position: '',
-      isShow: true,
-      transitionName: '',
-      addStyle: {},
-
-      rect: {},
-      boxRect: {}
+      isShow: false,
     }
   },
   computed: {
@@ -80,61 +75,15 @@ export default {
     } else {
       this.position = 'bottom'
     }
-
-    this.transitionName = `tooltip-${this.position}`
-  },
-  mounted() {
-    this.rect = this.$el.getBoundingClientRect()
-
-    const interval = setInterval(() => {
-      this.boxRect = this.$el.querySelector('.message-box').getBoundingClientRect()
-
-      if (this.boxRect.width > 0) {
-        this.isShow = false
-        clearInterval(interval)
-      }
-    }, 10)
   },
   methods: {
-    init() {
-      if (this.position == 'top') {
-        this.addStyle = {
-          top: '',
-          bottom: '100%',
-          left: ((this.rect.width - this.boxRect.width) / 2) + 'px',
-          marginBottom: '7px',
-          marginTop: 0,
-        }
-      } else if (this.position == 'right') {
-        this.addStyle = {
-          top: ((this.rect.height - this.boxRect.height) / 2) + 'px',
-          left: '100%',
-          marginLeft: '7px',
-          marginTop: 0,
-        }
-      } else if (this.position == 'left') {
-        this.addStyle = {
-          top: ((this.rect.height - this.boxRect.height) / 2) + 'px',
-          right: '100%',
-          marginRight: '7px',
-          marginTop: 0,
-        }
-      } else {
-        this.addStyle = {
-          top: '100%',
-          left: ((this.rect.width - this.boxRect.width) / 2) + 'px',
-          marginTop: '7px'
-        }
-      }
-    },
     onMouse(show) {
-      this.init()
       this.isShow = show
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import './style.scss';
 </style>
