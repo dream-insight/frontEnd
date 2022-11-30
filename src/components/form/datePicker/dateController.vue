@@ -102,36 +102,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.select-month {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  margin: 15px auto;
-  width: 210px;
-  height: 30px;
-
-  span {
-    display: block;
-
-    em {
-      cursor: pointer;
-      font-size: 14px;
-      display: inline-block;
-      position: relative;
-
-      & + em {
-        margin-left: 10px;
-      }
-    }
-  }
-
-  button {
-    padding: 0;
-    border: 0;
-    background: transparent;
-    font-size: 15px;
-  }
-}
-</style>

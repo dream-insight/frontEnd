@@ -8,14 +8,14 @@
             :placeholder="holderText[0]"
             :value="value[0]"
           />
-          <font-awesome-icon class="ml-1" icon="fas fa-calendar-alt" />
+          <font-awesome-icon class="icon-cal" icon="fas fa-calendar-alt" />
           &nbsp;&nbsp;~&nbsp;&nbsp;
           <input
             type="text"
             :placeholder="holderText[1]"
             :value="value[1]"
           />
-          <font-awesome-icon class="ml-1" icon="fas fa-calendar-alt" />
+          <font-awesome-icon class="icon-cal" icon="fas fa-calendar-alt" />
         </template>
 
         <template v-else>
@@ -24,7 +24,7 @@
             :placeholder="holderText"
             :value="value"
           />
-          <font-awesome-icon class="ml-1" icon="fas fa-calendar-alt" />
+          <font-awesome-icon class="icon-cal" icon="fas fa-calendar-alt" />
         </template>
       </div>
 
@@ -588,18 +588,18 @@ export default {
         } else {
           date = new Date(date.getFullYear(), date.getMonth(), 0)
         }
+      }
 
-        let year = date.getFullYear()
-        let month = date.getMonth() + 1
-        let day = date.getDate()
+      let year = date.getFullYear()
+      let month = date.getMonth() + 1
+      let day = date.getDate()
 
-        if (month.toString().length === 1) {
-          month = '0' + month.toString()
-        }
+      if (month.toString().length === 1) {
+        month = '0' + month.toString()
+      }
 
-        if (day.toString().length === 1) {
-          day = '0' + day.toString()
-        }
+      if (day.toString().length === 1) {
+        day = '0' + day.toString()
       }
 
       let format = `Y${this.separator}m${this.separator}d`
@@ -822,372 +822,15 @@ Date.prototype.getDateFormat = function(format, days = 0) {
     dDay = `0${day}`
   }
 
-  format = format.replace('Y', dYear)
-  format = format.replace('m', dMonth)
-  format = format.replace('d', dDay)
-  format = format.replace('y', year)
-  format = format.replace('n', month)
-  format = format.replace('j', day)
-
-  return format
+  return format.replace('Y', dYear)
+    .replace('m', dMonth)
+    .replace('d', dDay)
+    .replace('y', year)
+    .replace('n', month)
+    .replace('j', day)
 }
 </script>
 
-<style lang="scss" scoped>
-.date-picker {
-  position: relative;
-  display: inline-block;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-
-  &.error input[type=text] {
-    border: 2px solid #ff5252;
-  }
-
-  .description {
-    font-size: 12px !important;
-    font-weight: normal;
-    padding: 0 !important;
-    margin-bottom: 0 !important;
-    border: 0 !important;
-    color: #ff5252;
-    text-align: left !important;
-
-    &.error {
-      animation: shaking 0.3s;
-    }
-  }
-
-  .picker-popup {
-    position: fixed;
-    border-radius: 3px;
-    box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
-    background: #fff;
-    z-index: 100;
-    line-height: 1;
-
-    .search-date {
-      padding: 10px;
-      border-bottom: 1px solid #dadada;
-      text-align: left;
-
-      a {
-        display: inline-block;
-        text-decoration: none;
-        border: 1px solid rgb(138, 138, 138);
-        font-size: 12px;
-        padding: 0 12px;
-        line-height: 24px;
-        color: rgb(101, 101, 101);
-        border-radius: 3px;
-
-        & + a {
-          margin-left: 3px;
-        }
-
-        &.active {
-          background-color: rgb(138, 138, 138);
-          color: #fff;
-        }
-      }
-    }
-
-    .start-end-text {
-      line-height: 30px;
-      font-size: 14px;
-      font-weight: 700;
-      text-align: center;
-      border-bottom: 1px solid #eee;
-      color: #444;
-    }
-
-    .picker-wrap {
-      .calendar-inner {
-        width: 100%;
-        text-align: center;
-        font-size: 0;
-      }
-
-      .calendar {
-        display: inline-block;
-        width: 240px;
-        box-sizing: border-box;
-        vertical-align: top;
-
-        &.end_calendar {
-          border-left: 1px solid #eee;
-        }
-      }
-
-      .select-year-month {
-        width: 210px;
-        height: 30px;
-        margin: 15px auto;
-        text-align: center;
-        font-size: 13px;
-
-        select:nth-child(1) {
-          min-width: 80px !important;
-        }
-
-        select:nth-child(2) {
-          min-width: 50px !important;
-        }
-
-        button {
-          display: inline-block;
-          margin-left: 5px;
-          border: 0;
-          height: 25px;
-          line-height: 25px;
-          width: 25px;
-          text-align: center;
-          background-color: teal;
-          color: #fff !important;
-          border-radius: 5px;
-        }
-      }
-
-
-      .select-calendar {
-        width: 210px;
-        margin: 0 auto;
-
-        ul {
-          display: table;
-          width: 100%;
-          font-size: 13px;
-          margin: 0;
-          padding-left: 0;
-
-          li {
-            display: table-cell;
-            text-align: center;
-            vertical-align: middle;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-
-            &.beforeMonth,
-            &.afterMonth {
-              color: #aaa;
-            }
-
-            &.today {
-              background: #425cf432;
-            }
-
-            &.date-range {
-              background: #eceefe;
-            }
-
-            &.select,
-            &.date-start,
-            &.day_end {
-              background: #425cf4;
-              color: #fff;
-            }
-          }
-
-          &.header li {
-            cursor: default !important
-          }
-
-          li:first-child {
-            color: #ff5253;
-          }
-
-          &:first-child li {
-            font-weight: 700;
-            color: #222;
-          }
-
-          &:not(.header) li:hover {
-            background: #f1f1f1;
-          }
-        }
-      }
-
-      .btn-area {
-        padding: 10px;
-        border-top: 1px solid #dadada;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-
-        .select-date {
-          font-size: 15px;
-
-          &.selected-error {
-            color: red;
-          }
-        }
-
-        .btn {
-          display: inline-block;
-          text-decoration: none;
-          border: 1px solid rgb(138, 138, 138);
-          font-size: 14px;
-          padding: 0 15px;
-          line-height: 28px;
-          color: rgb(101, 101, 101);
-          border-radius: 3px;
-
-          & + .btn {
-            margin-left: 5px;
-          }
-
-          &.okay {
-            background-color: rgb(138, 138, 138);
-            color: #fff;
-          }
-        }
-      }
-    }
-
-    &.single {
-      width: 230px;
-
-      .picker-wrap .calendar {
-        width: 210px;
-      }
-    }
-
-    &.singleFull {
-      width: 100%;
-
-      .picker-wrap {
-        .calendar {
-          width: 189px;
-        }
-
-        .select-calendar {
-          width: 189px;
-          margin-bottom: 20px;
-
-          ul li {
-            width: 27px;
-            line-height: 27px;
-          }
-        }
-      }
-    }
-  }
-
-  &.show .picker-popup {
-    display: block;
-  }
-
-  &.show .picker-date-text:after {
-    transform: rotate(-180deg);
-    transition: all 0.5s;
-  }
-
-  .picker-date-text {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    i {
-      font-size: 21px;
-      color: rgb(143, 143, 143);
-      margin: 0 4px;
-
-      & + input {
-        margin-left: 5px;
-      }
-    }
-
-    p {
-      display: block;
-    }
-  }
-
-  .calendar-inner {
-    min-height: 257px;
-  }
-
-  .select-calendar-wrap {
-    min-height: 210px !important;
-    margin-bottom: 10px;
-  }
-}
-
-.ml-1 {
-  margin-left: 3px;
-}
-
-/* transitions */
-.picker-scale-enter,
-.picker-scale-leave-to {
-  opacity: 0;
-  transform: scale(0.5);
-}
-.picker-scale-enter-active,
-.picker-scale-leave-active {
-  transition: all 0.1s ease-out;
-}
-
-.trans-left-enter {
-  opacity: 0;
-  transform: translateX(20px);
-}
-.trans-left-leave-to {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-.trans-left-enter-active,
-.trans-left-leave-active {
-  transition: all 0.1s ease-out;
-}
-
-.trans-right-enter {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-.trans-right-leave-to {
-  opacity: 0;
-  transform: translateX(20px);
-}
-.trans-right-enter-active,
-.trans-right-leave-active {
-  transition: all 0.1s ease-out;
-}
-
-.trans-down-enter {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-.trans-down-leave-to {
-    opacity: 0;
-    transform: translateY(20px);
-}
-.trans-down-enter-active,
-.trans-down-leave-active {
-    transition: all 0.1s ease-out;
-}
-
-/* error message shaking */
-@keyframes shaking {
-  0% {
-    transform: translateX(10px);
-  }
-  25% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(10px);
-  }
-  75% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(10px);
-  }
-}
+<style lang="scss">
+@import "./style.scss";
 </style>
