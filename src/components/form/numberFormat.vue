@@ -26,6 +26,8 @@
 </template>
 
 <script>
+const NumberFormat = new Intl.NumberFormat('ko-KR')
+
 export default {
   name: 'numberFormat',
   props: {
@@ -157,20 +159,7 @@ export default {
     },
     format(v) {
       if (v !== '') {
-        let minus = parseFloat(v) >= 0 ? false : true
-        let find = /(\d+)(\d{3})/
-        let spNum = v.toString().split('.')
-        let num = parseInt(spNum[0].replace(/[^0-9]/g, ''), 10).toString()
-
-        while (find.test(num)) {
-          num = num.replace(find, '$1' + ',' + '$2')
-        }
-
-        if (minus) {
-          num = `-${num}`
-        }
-
-        return num
+        return NumberFormat.format(v)
       }
 
       return ''

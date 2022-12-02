@@ -3,7 +3,7 @@
     <div :class="['selector-box', { month: max === 0 }]">
       <div class="selector-box-wrap">
         <div class="arrow"></div>
-        <ul ref="ul">
+        <ul id="listul">
           <li
             :class="{ active: num == date }"
             @click="updateValue(num)"
@@ -45,16 +45,16 @@ export default {
     isShow(v) {
       if (v) {
         setTimeout(() => {
-          const li = this.$refs.ul.$el.querySelector('li.active')
+          const ul = this.$el.querySelector('#listul')
+          const li = ul.querySelector('li.active')
           const top = li.offsetTop - li.offsetHeight
-          this.$refs.ul.$el.scrollTop = top
+          ul.scrollTop = top
         }, 100)
       }
     }
   },
   data() {
     return {
-      isShow: true,
       items: [],
     }
   },
