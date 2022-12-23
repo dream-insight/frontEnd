@@ -6,7 +6,7 @@
     <transition name="tooltip">
       <div
         :class="['message-box', position]"
-        :style="[{width: `${width}px`}, addStyle]"
+        :style="[{ width: `${width}px` }]"
         v-if="isShow">
         <template v-if="Array.isArray(message)">
           <ul>
